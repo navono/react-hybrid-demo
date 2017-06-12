@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import buttonActions from '../actions/ButtonActions';
 import MyButton from './MyButton';
-import listStore, { TestClass } from '../stores/ListStore'
+import listStore from '../stores/ListStore'
 
 class MyButtonController extends Component {
     constructor (props) {
@@ -39,7 +39,6 @@ class MyButtonController extends Component {
 
     createNewItem (event) {
         // ButtonActions.addNewItem('new item');
-        // this.state.btnActions.addNewItem('new item');
         buttonActions.addNewItem('new item');
     }
 

@@ -34,21 +34,4 @@ let listStore = new ListStore();
 // ListStore.propTypes = { items: [] };
 // ListStore.defaultProps = { items: [] };
 
-export class TestClass {
-    // constructor (props) {
-    //     this.state = {
-    //         data: 'data from TestClass'
-    //     }
-    // }
-
-    print () {
-        console.log('print');
-    }
-
-    static print2 () {
-        console.log('print2');
-    }
-}
-
 export default listStore;
-// export {ListStore, TestClass};
