@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Grid, Navbar, Jumbotron, Button } from 'react-bootstrap';
-import TodoBox from './todoList'
+import TodoBox from './components/todoList'
 import logo from './logo.svg';
 import './App.css';
 
