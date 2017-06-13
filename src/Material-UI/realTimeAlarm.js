@@ -2,7 +2,7 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 13:29:01
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-13 19:39:09
+ * @Last Modified time: 2017-06-13 19:43:40
  *
  * @Description
  * real time alarm control
@@ -77,7 +77,7 @@ const buttonStyle = {
 
 const muiTheme = getMuiTheme(lightBaseTheme);
 
-class AlarmControlHeader extends Component {
+class ControlHeader extends Component {
     constructor (props, context) {
         super(props, context);
     }
@@ -186,7 +186,7 @@ class AlarmList extends Component {
     constructor (props, context) {
         super(props, context);
         this.state = {
-            selected: [1]
+            selected: []
         };
         this.handleRowSelection = this.handleRowSelection.bind(this);
     }
@@ -268,7 +268,7 @@ class RealtimeAlarm extends Component {
         return (
             <MuiThemeProvider muiTheme={muiTheme} >
                 <div style={styles.container}>
-                    <AlarmControlHeader />
+                    <ControlHeader />
                     <FilterTree />
                     <div style={styles.alarmContent}>
                         <AlarmOperation />
