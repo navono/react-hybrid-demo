@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Grid, Navbar, Jumbotron, Button } from 'react-bootstrap';
-import TodoBox from './components/todoList'
 import logo from './logo.svg';
-import './App.css';
+// import './App.css';
+import TodoBox from './Flux/components/todoList'
 
 class App extends Component {
   /* render() {
