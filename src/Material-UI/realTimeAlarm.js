@@ -2,7 +2,7 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 13:29:01
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-13 19:15:57
+ * @Last Modified time: 2017-06-13 19:39:09
  *
  * @Description
  * real time alarm control
@@ -69,11 +69,13 @@ const buttonStyle = {
     'margin': 7
 }
 
-const muiTheme = getMuiTheme({
-    palette: {
-        accent1Color: colors.deepOrange500
-    }
-});
+// const muiTheme = getMuiTheme({
+//     palette: {
+//         accent1Color: colors.deepOrange500
+//     }
+// });
+
+const muiTheme = getMuiTheme(lightBaseTheme);
 
 class AlarmControlHeader extends Component {
     constructor (props, context) {
@@ -82,7 +84,7 @@ class AlarmControlHeader extends Component {
 
     render () {
         return (
-            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+            <MuiThemeProvider muiTheme={muiTheme}>
                 <div style={styles.header}>
                     <h1 style={styles.noPaddingMargin}><b>Realtime Alarm Control</b></h1>
                 </div>
@@ -98,7 +100,7 @@ class FilterTree extends Component {
 
     render () {
         return (
-            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+            <MuiThemeProvider muiTheme={muiTheme}>
                 <div style={styles.filterTree}>
                      <List style={{'width': '100%'}}>
                         <Subheader style={styles.filterTreeSubHeader}>报警过滤</Subheader>
@@ -120,10 +122,22 @@ class FilterTree extends Component {
 class AlarmOperation extends Component {
     constructor (props, context) {
         super(props, context);
+        this.state = {
+            alarmPrint: false
+        }
     }
 
     onPrint () {
         console.log('print alarm');
+        this.setState({
+            alarmPrint: true
+        })
+    }
+
+    onPrintDlgClose () {
+        this.setState({
+            alarmPrint: false
+        })
     }
 
     onAck () {
@@ -135,12 +149,33 @@ class AlarmOperation extends Component {
     }
 
     render () {
+        const standardActions = [
+            <FlatButton
+                label='OK'
+                primary={true}
+                onTouchTap={this.onPrintDlgClose.bind(this)}
+            />,
+            <FlatButton
+                label='CANCEL'
+                primary={true}
+                keyboardFocused={true}
+                onTouchTap={this.onPrintDlgClose.bind(this)}
+            />
+        ];
+
         return (
-            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+            <MuiThemeProvider muiTheme={muiTheme}>
                 <div style={styles.noPaddingMargin}>
-                            <RaisedButton label='确认' style={buttonStyle} primary={true} onTouchTap={this.onAck}/>
-                            <RaisedButton label='冻结' style={buttonStyle} primary={true} onTouchTap={this.onFreeze}/>
-                            <RaisedButton label='打印' style={buttonStyle} secondary={true} onTouchTap={this.onPrint}/>
+                    <Dialog
+                        title="打印"
+                        actions={standardActions}
+                        open={this.state.alarmPrint}
+                        modal={false}
+                        onRequestClose={this.onPrintDlgClose.bind(this)}>准备打印报警！</Dialog>
+
+                    <RaisedButton label='确认' style={buttonStyle} primary={true} onTouchTap={this.onAck.bind(this)}/>
+                    <RaisedButton label='冻结' style={buttonStyle} primary={true} onTouchTap={this.onFreeze.bind(this)}/>
+                    <RaisedButton label='打印' style={buttonStyle} secondary={true} onTouchTap={this.onPrint.bind(this)}/>
                 </div>
             </MuiThemeProvider>
         )
@@ -168,7 +203,7 @@ class AlarmList extends Component {
 
     render () {
         return (
-            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+            <MuiThemeProvider muiTheme={muiTheme}>
                 <Table onRowSelection={this.handleRowSelection}>
                     {/* <TableHeader>
                         <TableRow>
@@ -212,11 +247,12 @@ class AlarmEntryInfo extends Component {
 
     render () {
         return (
-            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-                <div>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut.
-                    </p>
+            <MuiThemeProvider muiTheme={muiTheme}>
+                <div style={{'margin': 10}}>
+                    <p>报警等级：</p>
+                    <p>报警处置：</p>
+                    <p>报警来源：</p>
+                    <p>报警风险等级：</p>
                 </div>
             </MuiThemeProvider>
         )
@@ -230,7 +266,7 @@ class RealtimeAlarm extends Component {
 
     render () {
         return (
-            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)} >
+            <MuiThemeProvider muiTheme={muiTheme} >
                 <div style={styles.container}>
                     <AlarmControlHeader />
                     <FilterTree />
