@@ -2,19 +2,21 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 11:24:21
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-13 11:43:21
+ * @Last Modified time: 2017-06-13 14:52:32
  *
+ * @Description
  * In this file, we create a React component
  * which incorporates components provided by Material-UI.
  */
 import React, { Component } from 'react';
-import { RaisedButton, Dialog, FlatButton } from 'material-ui';
+import { RaisedButton, Dialog, FlatButton, List, } from 'material-ui';
 import { colors, getMuiTheme, MuiThemeProvider } from 'material-ui/styles';
+// import { ContentInbox, ActionGrade } from 'material-ui/svg-icons'
 
 const styles = {
     container: {
         textAlign: 'center',
-        paddingTop: 200
+        paddingTop: 100
     }
 };
 

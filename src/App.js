@@ -3,7 +3,13 @@ import ReactDOM from 'react-dom';
 import { Grid, Navbar, Jumbotron, Button } from 'react-bootstrap';
 import logo from './logo.svg';
 // import './App.css';
-import TodoBox from './Flux/components/todoList'
+import TodoBox from './Flux/components/todoList';
+import ListExampleBasic, { ListExampleIcon } from './Semantic-UI/semantic-ui-demo';
+import MyButtonController from './Flux/components/MyButtonController';
+
+import MaterialMain from './Material-UI/material-ui-demo';
+import RealtimeAlarm from './Material-UI/realTimeAlarm';
+import TestPage from './Material-UI/testCSS';
 
 class App extends Component {
   /* render() {
@@ -46,7 +52,10 @@ class App extends Component {
                     </p>
                 </Grid>
               </Jumbotron>
-              <Grid><TodoBox /></Grid>
+              {/*<Grid><TodoBox /></Grid>*/}
+              <Grid><MaterialMain/></Grid>
+              <Grid><RealtimeAlarm/></Grid>
+              <Grid><TestPage /></Grid>
             </div>
         )
     }
