@@ -6,9 +6,11 @@
     "bootstrap": "^3.3.7",
     "eslint-plugin-node": "^5.0.0",
     "flux": "^3.1.2",
+    "material-ui": "^0.18.3",
     "react": "^15.5.4",
     "react-bootstrap": "^0.31.0",
     "react-dom": "^15.5.4",
+    "react-tap-event-plugin": "^2.0.1",
     "semantic-ui-react": "^0.68.5"
   },
   "devDependencies": {
