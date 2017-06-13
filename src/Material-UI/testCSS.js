@@ -2,14 +2,14 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 16:20:41
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-13 17:08:00
+ * @Last Modified time: 2017-06-13 18:46:20
  *
  * @Description
  */
 import React, { Component } from 'react';
 import { RaisedButton, Dialog, FlatButton, List, ListItem, Subheader } from 'material-ui';
 import { ContentInbox, ActionGrade } from 'material-ui/svg-icons';
-import { colors, getMuiTheme, MuiThemeProvider } from 'material-ui/styles';
+import { colors, getMuiTheme, MuiThemeProvider, lightBaseTheme, darkBaseTheme } from 'material-ui/styles';
 
 const styles = {
     container: {
@@ -59,7 +59,7 @@ const styles = {
 class TestPage extends Component {
     render () {
         return (
-            <MuiThemeProvider>
+            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
             <div id="container" style={styles.container}>
                 <div id="top" style={styles.top}>
                     <h1 style={styles.h1}>Header</h1>

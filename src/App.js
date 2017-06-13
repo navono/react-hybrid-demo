@@ -55,7 +55,7 @@ class App extends Component {
               {/* <Grid><TodoBox /></Grid> */}
               <Grid><MaterialMain/></Grid>
               <Grid><RealtimeAlarm/></Grid>
-              <Grid><TestPage /></Grid>
+              {/* <Grid><TestPage /></Grid> */}
             </div>
         )
     }

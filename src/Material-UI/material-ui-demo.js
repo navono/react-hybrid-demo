@@ -2,7 +2,7 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 11:24:21
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-13 18:23:40
+ * @Last Modified time: 2017-06-13 18:46:55
  *
  * @Description
  * In this file, we create a React component
@@ -10,7 +10,7 @@
  */
 import React, { Component } from 'react';
 import { RaisedButton, Dialog, FlatButton } from 'material-ui';
-import { colors, getMuiTheme, MuiThemeProvider } from 'material-ui/styles';
+import { colors, getMuiTheme, MuiThemeProvider, darkBaseTheme, lightBaseTheme } from 'material-ui/styles';
 // import { ContentInbox, ActionGrade } from 'material-ui/svg-icons'
 
 const styles = {
@@ -57,7 +57,7 @@ class MaterialMain extends Component {
             />);
 
         return (
-            <MuiThemeProvider muiTheme={muiTheme}>
+            <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
                 <div style={styles.container}>
                     <Dialog
                         open={this.state.open}

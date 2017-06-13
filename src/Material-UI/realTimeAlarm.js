@@ -2,7 +2,7 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 13:29:01
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-13 18:21:45
+ * @Last Modified time: 2017-06-13 19:15:57
  *
  * @Description
  * real time alarm control
@@ -10,7 +10,8 @@
 import React, { Component } from 'react';
 import { RaisedButton, Dialog, FlatButton, List, ListItem, Subheader, Divider } from 'material-ui';
 import { ContentInbox, ActionGrade } from 'material-ui/svg-icons';
-import { colors, getMuiTheme, MuiThemeProvider } from 'material-ui/styles';
+import { colors, getMuiTheme, MuiThemeProvider, darkBaseTheme, lightBaseTheme } from 'material-ui/styles';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
 const styles = {
     container: {
@@ -53,13 +54,19 @@ const styles = {
     alarmContent: {
         'margin-left': '20%',
         'border-left': '1px solid gray',
-        'padding': '1em',
-        'max-width': '36em'
+        // 'background-color': '#ddd',
+        'padding': '0 1em 1em 1em'
+        // 'max-width': '36em'
+    },
+    noPaddingMargin: {
+        // 'background-color': '#ddd',
+        'padding': 0,
+        'margin': 0
     }
 };
 
 const buttonStyle = {
-    'margin': 12
+    'margin': 7
 }
 
 const muiTheme = getMuiTheme({
@@ -68,6 +75,154 @@ const muiTheme = getMuiTheme({
     }
 });
 
+class AlarmControlHeader extends Component {
+    constructor (props, context) {
+        super(props, context);
+    }
+
+    render () {
+        return (
+            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+                <div style={styles.header}>
+                    <h1 style={styles.noPaddingMargin}><b>Realtime Alarm Control</b></h1>
+                </div>
+            </MuiThemeProvider>
+        )
+    }
+}
+
+class FilterTree extends Component {
+    constructor (props, context) {
+        super(props, context);
+    }
+
+    render () {
+        return (
+            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+                <div style={styles.filterTree}>
+                     <List style={{'width': '100%'}}>
+                        <Subheader style={styles.filterTreeSubHeader}>报警过滤</Subheader>
+                        <Divider />
+                        <ListItem primaryText='PLC' leftIcon={<ContentInbox />} />
+                        <ListItem primaryText='优先级' leftIcon={<ActionGrade />}
+                            primaryTogglesNestedList={true}
+                            nestedItems={[
+                                <ListItem primaryText='优先级31' leftIcon={<ActionGrade />}/>
+                            ]}
+                            />
+                    </List>
+                </div>
+            </MuiThemeProvider>
+        )
+    }
+}
+
+class AlarmOperation extends Component {
+    constructor (props, context) {
+        super(props, context);
+    }
+
+    onPrint () {
+        console.log('print alarm');
+    }
+
+    onAck () {
+        console.log('ack alarm');
+    }
+
+    onFreeze () {
+        console.log('freeze alarm');
+    }
+
+    render () {
+        return (
+            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+                <div style={styles.noPaddingMargin}>
+                            <RaisedButton label='确认' style={buttonStyle} primary={true} onTouchTap={this.onAck}/>
+                            <RaisedButton label='冻结' style={buttonStyle} primary={true} onTouchTap={this.onFreeze}/>
+                            <RaisedButton label='打印' style={buttonStyle} secondary={true} onTouchTap={this.onPrint}/>
+                </div>
+            </MuiThemeProvider>
+        )
+    }
+}
+
+class AlarmList extends Component {
+    constructor (props, context) {
+        super(props, context);
+        this.state = {
+            selected: [1]
+        };
+        this.handleRowSelection = this.handleRowSelection.bind(this);
+    }
+
+    isSelected (index) {
+        return this.state.selected.indexOf(index) !== -1;
+    }
+
+    handleRowSelection (selectedRows) {
+        this.setState({
+            selected: selectedRows
+        });
+    }
+
+    render () {
+        return (
+            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+                <Table onRowSelection={this.handleRowSelection}>
+                    {/* <TableHeader>
+                        <TableRow>
+                            <TableHeaderColumn>ID</TableHeaderColumn>
+                            <TableHeaderColumn>Name</TableHeaderColumn>
+                            <TableHeaderColumn>Status</TableHeaderColumn>
+                        </TableRow>
+                    </TableHeader> */}
+                    <TableBody>
+                        <TableRow selected={this.isSelected(0)}>
+                            <TableRowColumn>1</TableRowColumn>
+                            <TableRowColumn>John Smith</TableRowColumn>
+                            <TableRowColumn>Employed</TableRowColumn>
+                        </TableRow>
+                        <TableRow selected={this.isSelected(1)}>
+                            <TableRowColumn>2</TableRowColumn>
+                            <TableRowColumn>Randal White</TableRowColumn>
+                            <TableRowColumn>Unemployed</TableRowColumn>
+                        </TableRow>
+                        <TableRow selected={this.isSelected(2)}>
+                            <TableRowColumn>3</TableRowColumn>
+                            <TableRowColumn>Stephanie Sanders</TableRowColumn>
+                            <TableRowColumn>Employed</TableRowColumn>
+                        </TableRow>
+                        {/* <TableRow>
+                            <TableRowColumn selected={this.isSelected(3)}>4</TableRowColumn>
+                            <TableRowColumn>Steve Brown</TableRowColumn>
+                            <TableRowColumn>Employed</TableRowColumn>
+                        </TableRow> */}
+                    </TableBody>
+                </Table>
+            </MuiThemeProvider>
+        )
+    }
+}
+
+class AlarmEntryInfo extends Component {
+    constructor (props, context) {
+        super(props, context)
+    }
+
+    render () {
+        return (
+            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
+                <div>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut.
+                    </p>
+                </div>
+            </MuiThemeProvider>
+        )
+    }
+}
+
 class RealtimeAlarm extends Component {
     constructor (props, context) {
         super(props, context);
@@ -75,37 +230,17 @@ class RealtimeAlarm extends Component {
 
     render () {
         return (
-            <MuiThemeProvider muiTheme={muiTheme} >
+            <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)} >
                 <div style={styles.container}>
-                    <div style={styles.header}>
-                        <h1 style={{'padding': 0, 'margin': 0}}><b>Realtime Alarm Control</b></h1>
-                    </div>
-                    <div style={styles.filterTree}>
-                            <List style={{'width': '100%'}}>
-                                <Subheader style={styles.filterTreeSubHeader}>报警过滤</Subheader>
-                                <Divider />
-                                <ListItem primaryText='PLC' leftIcon={<ContentInbox />} />
-                                <ListItem primaryText='优先级' leftIcon={<ActionGrade />}
-                                    primaryTogglesNestedList={true}
-                                    nestedItems={[
-                                        <ListItem primaryText='优先级31' leftIcon={<ActionGrade />}/>
-                                    ]}
-                                    />
-                            </List>
+                    <AlarmControlHeader />
+                    <FilterTree />
+                    <div style={styles.alarmContent}>
+                        <AlarmOperation />
+                        <AlarmList />
+                        <Divider />
+                        <AlarmEntryInfo />
                     </div>
 
-                    <div style={styles.alarmContent}>
-                        <div>
-                            <RaisedButton label='打印' style={buttonStyle} />
-                        </div>
-                        <h2 style={styles.h2}>Subheading</h2>
-                        <p>
-                        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.
-                        </p>
-                        <p>
-                        Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
-                        </p>
-                    </div>
                 </div>
             </MuiThemeProvider>
         )
