@@ -2,7 +2,7 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 13:29:01
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-13 19:43:40
+ * @Last Modified time: 2017-06-14 09:44:35
  *
  * @Description
  * real time alarm control
@@ -204,37 +204,27 @@ class AlarmList extends Component {
     render () {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
-                <Table onRowSelection={this.handleRowSelection}>
-                    {/* <TableHeader>
-                        <TableRow>
-                            <TableHeaderColumn>ID</TableHeaderColumn>
-                            <TableHeaderColumn>Name</TableHeaderColumn>
-                            <TableHeaderColumn>Status</TableHeaderColumn>
-                        </TableRow>
-                    </TableHeader> */}
-                    <TableBody>
-                        <TableRow selected={this.isSelected(0)}>
-                            <TableRowColumn>1</TableRowColumn>
-                            <TableRowColumn>John Smith</TableRowColumn>
-                            <TableRowColumn>Employed</TableRowColumn>
-                        </TableRow>
-                        <TableRow selected={this.isSelected(1)}>
-                            <TableRowColumn>2</TableRowColumn>
-                            <TableRowColumn>Randal White</TableRowColumn>
-                            <TableRowColumn>Unemployed</TableRowColumn>
-                        </TableRow>
-                        <TableRow selected={this.isSelected(2)}>
-                            <TableRowColumn>3</TableRowColumn>
-                            <TableRowColumn>Stephanie Sanders</TableRowColumn>
-                            <TableRowColumn>Employed</TableRowColumn>
-                        </TableRow>
-                        {/* <TableRow>
-                            <TableRowColumn selected={this.isSelected(3)}>4</TableRowColumn>
-                            <TableRowColumn>Steve Brown</TableRowColumn>
-                            <TableRowColumn>Employed</TableRowColumn>
-                        </TableRow> */}
-                    </TableBody>
-                </Table>
+                <div>
+                    <AlarmOperation />
+                    <Table onRowSelection={this.handleRowSelection} multiSelectable={true}>
+                        {/* <TableHeader>
+                            <TableRow>
+                                <TableHeaderColumn>ID</TableHeaderColumn>
+                                <TableHeaderColumn>Name</TableHeaderColumn>
+                                <TableHeaderColumn>Status</TableHeaderColumn>
+                            </TableRow>
+                        </TableHeader> */}
+                        <TableBody showRowHover={true}>
+                            {this.props.alarmItems.map((row, index) => (
+                                <TableRow key={index} selected={this.isSelected(index)}>
+                                    {/* <TableRowColumn>{index}</TableRowColumn> */}
+                                    <TableRowColumn>{row.tagName}</TableRowColumn>
+                                    <TableRowColumn>{row.tagDesc}</TableRowColumn>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
             </MuiThemeProvider>
         )
     }
@@ -262,6 +252,14 @@ class AlarmEntryInfo extends Component {
 class RealtimeAlarm extends Component {
     constructor (props, context) {
         super(props, context);
+        this.state = {
+            alarmItems: [
+                {tagName: 'AA', tagDesc: 'This is a description'},
+                {tagName: 'BB', tagDesc: 'This is a description'},
+                {tagName: 'CC', tagDesc: 'This is a description'},
+                {tagName: 'DD', tagDesc: 'This is a description'}
+            ]
+        }
     }
 
     render () {
@@ -271,8 +269,7 @@ class RealtimeAlarm extends Component {
                     <ControlHeader />
                     <FilterTree />
                     <div style={styles.alarmContent}>
-                        <AlarmOperation />
-                        <AlarmList />
+                        <AlarmList alarmItems={this.state.alarmItems}/>
                         <Divider />
                         <AlarmEntryInfo />
                     </div>
