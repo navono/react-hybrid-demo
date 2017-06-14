@@ -190,7 +190,7 @@ class TodoForm extends Component {
             <hr />
             <form className="form-horizontal" onSubmit={this.submitTask}>
               <div className="form-group">
-                <label for="task" className="col-md-2 control-label">Task</label>
+                 <label className="col-md-2 control-label">Task</label> 
                 <div className="col-md-10">
                   <input type="text" id="task" ref="task" className="form-control" placeholder="你想做点什么"></input>
                 </div>

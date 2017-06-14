@@ -15,14 +15,14 @@ const styles = {
     container: {
         'width': '90%',
         'margin': '10px auto',
-        'background-color': '#fff',
+        'backgroundColor': '#fff',
         'color': '#333',
         'border': '1px solid gray',
         'line-height': '130%'
     },
     top: {
         'padding': '.5em',
-        'background-color': '#ddd',
+        'backgroundColor': '#ddd',
         'border-bottom': '1px solid gray'
     },
     leftnav: {
@@ -44,7 +44,7 @@ const styles = {
         'margin': 0,
         'padding': '.5em',
         'color': '#333',
-        'background-color': '#ddd',
+        'backgroundColor': '#ddd',
         'border-top': '1px solid gray'
     },
     h1: {
