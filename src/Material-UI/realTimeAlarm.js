@@ -2,16 +2,17 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 13:29:01
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-14 16:45:34
+ * @Last Modified time: 2017-06-15 14:40:45
  *
  * @Description
  * real time alarm control
  */
 import React, { Component } from 'react';
-import { RaisedButton, Dialog, FlatButton, List, ListItem, makeSelectable, Subheader, Divider } from 'material-ui';
+import { RaisedButton, IconButton, Dialog, FlatButton, List, ListItem, makeSelectable, Subheader, Divider } from 'material-ui';
 import { ContentInbox, ActionGrade } from 'material-ui/svg-icons';
 import { colors, getMuiTheme, MuiThemeProvider, darkBaseTheme, lightBaseTheme } from 'material-ui/styles';
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
+import SvgIcon from 'material-ui/SvgIcon'
 
 const styles = {
     container: {
@@ -86,7 +87,7 @@ class ControlHeader extends Component {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div style={styles.header}>
-                    <h1 style={styles.noPaddingMargin}><b>Realtime Alarm Control</b></h1>
+                    <p style={styles.noPaddingMargin}><b>Realtime Alarm Control</b></p>
                 </div>
             </MuiThemeProvider>
         )
@@ -116,11 +117,11 @@ function wrapState (ComposedComponent) {
 
         render () {
             return (
-            <ComposedComponent
-                value={this.state.selectedIndex}
-                onChange={this.handleRequestChange.bind(this)}>
-                {this.props.children}
-            </ComposedComponent>)
+                <ComposedComponent
+                    value={this.state.selectedIndex}
+                    onChange={this.handleRequestChange.bind(this)}>
+                    {this.props.children}
+                </ComposedComponent>)
         }
     }
 
@@ -168,25 +169,25 @@ class FilterTree extends Component {
                 if (element.icon === 'ContentInbox') {
                     if (element.subItems.length !== 0) {
                         items.push(<ListItem key={element} value={this.state.valueIndex}
-                                             primaryText={element.name} leftIcon={<ContentInbox/>}
-                                             primaryTogglesNestedList={true}
-                                             nestedItems={nestedItem}/>);
+                            primaryText={element.name} leftIcon={<ContentInbox/>}
+                            primaryTogglesNestedList={true}
+                            nestedItems={nestedItem}/>);
                     } else {
                         items.push(<ListItem key={element} value={this.state.valueIndex}
-                                             primaryText={element.name} leftIcon={<ContentInbox/>}
-                                             nestedItems={nestedItem}/>);
+                            primaryText={element.name} leftIcon={<ContentInbox/>}
+                            nestedItems={nestedItem}/>);
                     }
                     this.state.valueIndex++;
                 } else if (element.icon === 'ActionGrade') {
                     if (element.subItems.length !== 0) {
                         items.push(<ListItem key={element} value={this.state.valueIndex}
-                                             primaryText={element.name} leftIcon={<ActionGrade/>}
-                                             primaryTogglesNestedList={true}
-                                             nestedItems={nestedItem}/>);
+                            primaryText={element.name} leftIcon={<ActionGrade/>}
+                            primaryTogglesNestedList={true}
+                            nestedItems={nestedItem}/>);
                     } else {
                         items.push(<ListItem key={element} value={this.state.valueIndex}
-                                             primaryText={element.name} leftIcon={<ActionGrade/>}
-                                             nestedItems={nestedItem}/>);
+                            primaryText={element.name} leftIcon={<ActionGrade/>}
+                            nestedItems={nestedItem}/>);
                     }
                     this.state.valueIndex++;
                 }
@@ -200,7 +201,7 @@ class FilterTree extends Component {
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div style={styles.filterTree}>
-                     <SelectableList style={{'width': '100%'}} onChanged={this.onSelectChanged.bind(this)}>
+                    <SelectableList style={{'width': '100%'}} onChanged={this.onSelectChanged.bind(this)}>
                         <Subheader style={styles.filterTreeSubHeader}>报警过滤</Subheader>
                         <Divider />
                         { this.state.items }
@@ -210,6 +211,14 @@ class FilterTree extends Component {
         )
     }
 }
+
+const AckDoneIcon = (props) => (
+    <IconButton tooltip='Ack'>
+        <SvgIcon {...props}>
+            <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />>
+        </SvgIcon>
+    </IconButton>
+)
 
 class AlarmOperation extends Component {
     constructor (props, context) {
@@ -265,9 +274,11 @@ class AlarmOperation extends Component {
                         modal={false}
                         onRequestClose={this.onPrintDlgClose.bind(this)}>准备打印报警！</Dialog>
 
-                    <RaisedButton label='确认' style={buttonStyle} primary={true} onTouchTap={this.onAck.bind(this)}/>
+                    {/*<RaisedButton label='确认' style={buttonStyle} primary={true} onTouchTap={this.onAck.bind(this)}/>*/}
+                    <AckDoneIcon />
                     <RaisedButton label='确认所有' style={buttonStyle} primary={true} onTouchTap={this.onAckAll.bind(this)}/>
                     <RaisedButton label='冻结' style={buttonStyle} primary={true} onTouchTap={this.onFreeze.bind(this)}/>
+                    <RaisedButton label='消音' style={buttonStyle} secondary={true} onTouchTap={this.onPrint.bind(this)}/>
                     <RaisedButton label='打印' style={buttonStyle} secondary={true} onTouchTap={this.onPrint.bind(this)}/>
                 </div>
             </MuiThemeProvider>
@@ -353,20 +364,20 @@ class RealtimeAlarm extends Component {
         this.state = {
             currentShowItems: [
                 {tagName: 'AA', tagDesc: 'This is AA description', priority: 0},
-                // {tagName: 'BB', tagDesc: 'This is BB description', priority: 0},
-                // {tagName: 'CC', tagDesc: 'This is CC description', priority: 0},
-                // {tagName: 'DD', tagDesc: 'This is DD description', priority: 0},
-                // {tagName: 'EE', tagDesc: 'This is EE description', priority: 31},
-                // {tagName: 'FF', tagDesc: 'This is FF description', priority: 31},
-                // {tagName: 'GG', tagDesc: 'This is GG description', priority: 31},
-                // {tagName: 'HH', tagDesc: 'This is HH description', priority: 31},
+                {tagName: 'BB', tagDesc: 'This is BB description', priority: 0},
+                {tagName: 'CC', tagDesc: 'This is CC description', priority: 0},
+                {tagName: 'DD', tagDesc: 'This is DD description', priority: 0},
+                {tagName: 'EE', tagDesc: 'This is EE description', priority: 31},
+                {tagName: 'FF', tagDesc: 'This is FF description', priority: 31},
+                {tagName: 'GG', tagDesc: 'This is GG description', priority: 31},
+                {tagName: 'HH', tagDesc: 'This is HH description', priority: 31},
                 {tagName: 'II', tagDesc: 'This is II description', priority: 31}
             ],
             alarmItems: [],
             currentSelected: null,
             filterData: [
                 {
-                    name: 'PLC',
+                    name: '所有报警',
                     filterKey: 'catalog',
                     filterValue: 'PLC',
                     icon: 'ContentInbox',
@@ -379,6 +390,11 @@ class RealtimeAlarm extends Component {
                     icon: 'ActionGrade',
                     subItems: [
                         {name: '优先级0', filterKey: 'priority', filterValue: '0', icon: 'ActionGrade', subItems: []},
+                        {name: '优先级11', filterKey: 'priority', filterValue: '31', icon: 'ActionGrade', subItems: []},
+                        {name: '优先级21', filterKey: 'priority', filterValue: '31', icon: 'ActionGrade', subItems: []},
+                        {name: '优先级1', filterKey: 'priority', filterValue: '31', icon: 'ActionGrade', subItems: []},
+                        {name: '优先级1', filterKey: 'priority', filterValue: '31', icon: 'ActionGrade', subItems: []},
+                        {name: '优先级1', filterKey: 'priority', filterValue: '31', icon: 'ActionGrade', subItems: []},
                         {name: '优先级31', filterKey: 'priority', filterValue: '31', icon: 'ActionGrade', subItems: []}
                     ]}
             ],
@@ -430,7 +446,7 @@ class RealtimeAlarm extends Component {
             this.filterFlatten(this.state.filterData);
         }
 
-            // 保存原始的所有数据
+        // 保存原始的所有数据
 
         if (currentFilterIndex >= 0 && currentFilterIndex <= this.state.filterData.length) {
             let currentFilter = this.state.flattenFilters[currentFilterIndex];
@@ -460,7 +476,7 @@ class RealtimeAlarm extends Component {
                     <FilterTree filterData={this.state.filterData} onFilter={this.onAlarmFilter.bind(this)}/>
                     <div style={styles.alarmContent}>
                         <AlarmList alarmItems={this.state.currentShowItems} onSelectedRows={this.onAlarmItemSelected.bind(this)}/>
-                         <Divider />
+                        <Divider />
                         <AlarmEntryInfo currentSelected={this.state.currentSelected}/>
                     </div>
 

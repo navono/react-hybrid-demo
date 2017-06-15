@@ -2,14 +2,16 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 16:20:41
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-13 18:46:20
+ * @Last Modified time: 2017-06-15 14:07:53
  *
  * @Description
  */
 import React, { Component } from 'react';
-import { RaisedButton, Dialog, FlatButton, List, ListItem, Subheader } from 'material-ui';
+import { RaisedButton, IconButton, Dialog, FlatButton, List, ListItem, Subheader } from 'material-ui';
 import { ContentInbox, ActionGrade } from 'material-ui/svg-icons';
 import { colors, getMuiTheme, MuiThemeProvider, lightBaseTheme, darkBaseTheme } from 'material-ui/styles';
+
+import SvgIcon from 'material-ui/SvgIcon'
 
 const styles = {
     container: {
@@ -56,6 +58,22 @@ const styles = {
     }
 }
 
+const AckDoneIcon = (props) => (
+    <div>
+        <IconButton tooltip='Ack'>
+            <SvgIcon {...props}>
+                <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />>
+            </SvgIcon>
+        </IconButton>
+    </div>
+)
+
+const SvgIconExample = () => (
+    <div>
+        <AckDoneIcon />
+    </div>
+)
+
 class TestPage extends Component {
     render () {
         return (
@@ -82,6 +100,7 @@ class TestPage extends Component {
                 </div>
 
                 <div id="content" style={styles.content}>
+                    <SvgIconExample />
                     <h2 style={styles.h2}>Subheading</h2>
                     <p>
                     Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.

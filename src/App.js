@@ -4,7 +4,7 @@ import { Grid, Navbar, Jumbotron, Button } from 'react-bootstrap';
 import logo from './logo.svg';
 // import './App.css';
 import TodoBox from './Flux/components/todoList';
-import ListExampleBasic, { ListExampleIcon } from './Semantic-UI/semantic-ui-demo';
+import ListExampleBasic, { ListExampleIcon, TableExample } from './Semantic-UI/semantic-ui-demo';
 import MyButtonController from './Flux/components/MyButtonController';
 
 import MaterialMain from './Material-UI/material-ui-demo';
@@ -54,8 +54,8 @@ class App extends Component {
               </Jumbotron>
               <Grid><MaterialMain/></Grid>
               <Grid><RealtimeAlarm/></Grid>
-               <Grid><TodoBox /></Grid>
-              {/* <Grid><TestPage /></Grid> */}
+              <Grid><TodoBox /></Grid>
+              <div><ListExampleIcon /></div>
             </div>
         )
     }
