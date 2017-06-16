@@ -2,7 +2,7 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 13:29:01
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-16 16:24:22
+ * @Last Modified time: 2017-06-16 16:51:48
  *
  * @Description
  * real time alarm control
@@ -332,19 +332,23 @@ class AlarmList extends Component {
         });
 
         console.log(selectedRows);
-
-        let r = ReactDOM.findDOMNode(this);
-
-        console.log(r);
-
-        console.log(this.refs['row1'].styles);
-        let n = this.refs['row1'];
-
         this.props.onSelectedRows(selectedRows);
     }
 
+    getOperationButton (row) {
+        let cl = 'row' + row;
+        let domRow = document.getElementsByClassName(cl);
+        return domRow[0].getElementsByClassName('op');
+    }
+
     onRowHover (rowNumber) {
-        console.log(rowNumber);
+        // let domOperationBtn = this.getOperationButton(rowNumber);
+        // domOperationBtn[0].style.visibility = 'visible';
+    }
+
+    onRowHoverExit (rowNumber) {
+        // let domOperationBtn = this.getOperationButton(rowNumber);
+        // domOperationBtn[0].style.visibility = 'hidden';
     }
 
     onPreviousPage () {
@@ -376,31 +380,40 @@ class AlarmList extends Component {
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div>
                     <AlarmOperation />
-                    <Table onRowSelection={this.handleRowSelection} multiSelectable={true} height={'200'} onRowHover={this.onRowHover.bind(this)}>
+                    <Table multiSelectable={true} height={'200'} 
+                        onRowSelection={this.handleRowSelection} 
+                        onRowHover={this.onRowHover.bind(this)}
+                        onRowHoverExit={this.onRowHoverExit.bind(this)}>
                         <TableBody showRowHover={true} displayRowCheckbox={false}>
                             {this.props.alarmItems.map((row, index) => {
                                 let refName = 'row' + index;
-
                                 if (row.acked === false) {
                                     return (
-                                        <TableRow key={index} selected={this.isSelected(index)}>
+                                        <TableRow key={index} selected={this.isSelected(index)} className={refName}>
                                             <TableRowColumn style={{width: 10}} ></TableRowColumn>
                                             <TableRowColumn style={rowStyles.name}>{row.tagName}</TableRowColumn>
                                             <TableRowColumn style={rowStyles.alarmType}>{row.almType}</TableRowColumn>
                                             <TableRowColumn style={rowStyles.creatationTime}>{row.creationTime}</TableRowColumn>
                                             <TableRowColumn>{row.tagDesc}</TableRowColumn>
-                                            <TableRowColumn />
+                                            <TableRowColumn className='op' style={{visibility: 'hidden'}}>
+                                                 <IconMenu iconButtonElement={<IconButton><MoreVertIcon/></IconButton>}
+                                                        anchorOrigin={{horizontal: 'left', vertical: 'top'}}
+                                                        targetOrigin={{horizontal: 'left', vertical: 'top'}}>
+                                                    <MenuItem primaryText='操作A' />
+                                                    <MenuItem primaryText='操作B' />
+                                                </IconMenu>
+                                            </TableRowColumn>
                                         </TableRow>);
                                 } else {
                                     return (
-                                        <TableRow key={index} selected={this.isSelected(index)} ref={refName}>
+                                        <TableRow key={index} selected={this.isSelected(index)} className={refName}>
                                             {/* <TableRowColumn ><IconDone/></TableRowColumn> */}
                                             <TableRowColumn style={{width: 10}}>Ack</TableRowColumn>
                                             <TableRowColumn style={rowStyles.name}>{row.tagName}</TableRowColumn>
                                             <TableRowColumn style={rowStyles.alarmType}>{row.almType}</TableRowColumn>
                                             <TableRowColumn style={rowStyles.creatationTime}>{row.creationTime}</TableRowColumn>
                                             <TableRowColumn>{row.tagDesc}</TableRowColumn>
-                                            <TableRowColumn>
+                                            <TableRowColumn className='op' style={{visibility: 'hidden'}}>
                                                 <IconMenu iconButtonElement={<IconButton><MoreVertIcon/></IconButton>}
                                                         anchorOrigin={{horizontal: 'left', vertical: 'top'}}
                                                         targetOrigin={{horizontal: 'left', vertical: 'top'}}>
