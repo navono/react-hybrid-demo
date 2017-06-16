@@ -2,7 +2,7 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 13:29:01
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-16 16:51:48
+ * @Last Modified time: 2017-06-16 16:56:07
  *
  * @Description
  * real time alarm control
@@ -390,7 +390,7 @@ class AlarmList extends Component {
                                 if (row.acked === false) {
                                     return (
                                         <TableRow key={index} selected={this.isSelected(index)} className={refName}>
-                                            <TableRowColumn style={{width: 10}} ></TableRowColumn>
+                                            <TableRowColumn style={{width: 10, visibility: 'hidden'}} >Ack</TableRowColumn>
                                             <TableRowColumn style={rowStyles.name}>{row.tagName}</TableRowColumn>
                                             <TableRowColumn style={rowStyles.alarmType}>{row.almType}</TableRowColumn>
                                             <TableRowColumn style={rowStyles.creatationTime}>{row.creationTime}</TableRowColumn>
