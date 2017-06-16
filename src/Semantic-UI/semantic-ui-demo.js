@@ -1,20 +1,25 @@
 import React, {Component} from 'react';
-import { Button, List, Icon, Table } from 'semantic-ui-react';
+import { Button, List, Icon, Table, Label } from 'semantic-ui-react';
 
-const ListExampleBasic = () => (
-    <div>
-        <Icon name='spinner' size='large'/>
-        <List>
+const SemanticList = () => (
+    <div style={{margin: 'auto', border: '1px solid gray', width: '90%'}}>
+        <List divided selection>
             <List.Item >
-                <List.Content>Apples</List.Content>
+                <List.Icon name='users' verticalAlign='bottom'/>
+                Apples
+                <Label color='teal' horizontal>22</Label>
+                {/*<List.Icon floated='right' name='angle down' />*/}
             </List.Item>
             <List.Item icon='mail' content='Pears'/>
-            <List.Item>Oranges</List.Item>
+            <List.Item >
+                <List.Icon name='marker' />
+                <List.Content>Orange</List.Content>
+            </List.Item>
         </List>
     </div>
 )
 
-export const TableExample = () => {
+export const SemanticTable = () => {
     return (
         <Table celled>
             <Table.Header>
@@ -39,7 +44,7 @@ export const TableExample = () => {
     )
 }
 
-export class ListExampleIcon extends Component {
+export class SemanticListIcon extends Component {
     render () {
         return <div>
             <List>
@@ -66,4 +71,4 @@ export class ListExampleIcon extends Component {
     }
 }
 
-export default ListExampleBasic;
+export default SemanticList;
