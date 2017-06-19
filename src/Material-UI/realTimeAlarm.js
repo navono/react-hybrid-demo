@@ -2,7 +2,7 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 13:29:01
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-19 10:29:16
+ * @Last Modified time: 2017-06-19 14:14:12
  *
  * @Description
  * real time alarm control
@@ -90,24 +90,24 @@ const FilterType = {
     device: Symbol('device')
 }
 
-const IconDone = (props) => (
-    <IconButton tooltip='Ack'>
-        <SvgIcon {...props}>
+const IconDone = ({props, disabled, onClick}) => (
+    <IconButton tooltip='Ack' disabled={disabled}>
+        <SvgIcon {...props} onClick={onClick}>
             <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
         </SvgIcon>
     </IconButton>
 )
 
-const IconNext = ({props, diabled, onClick}) => (
-    <IconButton disabled={diabled}>
+const IconNext = ({props, disabled, onClick}) => (
+    <IconButton disabled={disabled}>
         <SvgIcon {...props} onClick={onClick}>
             <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z" />
         </SvgIcon>
     </IconButton>
 )
 
-const IconPrevious = ({props, diabled, onClick}) => (
-    <IconButton disabled={diabled}>
+const IconPrevious = ({props, disabled, onClick}) => (
+    <IconButton disabled={disabled}>
         <SvgIcon {...props} onClick={onClick}>
             <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" />
         </SvgIcon>
@@ -274,6 +274,11 @@ class AlarmOperation extends Component {
     }
 
     onAck () {
+        this.props.selectedRows.map((row, index) => {
+            this.props.alarmItems[row].acked = true;
+        });
+
+        this.props.update();
     }
 
     onAckAll () {
@@ -284,30 +289,20 @@ class AlarmOperation extends Component {
 
     render () {
         const standardActions = [
-            <FlatButton
-                label='OK'
-                primary={true}
-                onTouchTap={this.onPrintDlgClose.bind(this)}
-            />,
-            <FlatButton
-                label='CANCEL'
-                primary={true}
-                keyboardFocused={true}
-                onTouchTap={this.onPrintDlgClose.bind(this)}
-            />
+            <FlatButton label='OK' primary={true}
+                onTouchTap={this.onPrintDlgClose.bind(this)}/>,
+            <FlatButton label='CANCEL' primary={true} keyboardFocused={true}
+                onTouchTap={this.onPrintDlgClose.bind(this)}/>
         ];
 
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div style={styles.noPaddingMargin}>
-                    <Dialog
-                        title="打印"
-                        actions={standardActions}
+                    <Dialog title="打印" modal={false} actions={standardActions}
                         open={this.state.alarmPrint}
-                        modal={false}
                         onRequestClose={this.onPrintDlgClose.bind(this)}>准备打印报警！</Dialog>
 
-                    <IconDone />
+                    <IconDone disabled={false} onClick={this.onAck.bind(this)}/>
                     <RaisedButton label='确认所有' style={buttonStyle} primary={true} onTouchTap={this.onAckAll.bind(this)}/>
                     <RaisedButton label='冻结' style={buttonStyle} primary={true} onTouchTap={this.onFreeze.bind(this)}/>
                     <RaisedButton label='消音' style={buttonStyle} secondary={true} onTouchTap={this.onPrint.bind(this)}/>
@@ -322,40 +317,35 @@ class AlarmList extends Component {
     constructor (props, context) {
         super(props, context);
         this.state = {
-            selected: []
+            selected: [],
+            needUpdate: false
         };
-        this.handleRowSelection = this.handleRowSelection.bind(this);
     }
 
     isSelected (index) {
         return this.state.selected.indexOf(index) !== -1;
     }
 
-    handleRowSelection (selectedRows) {
+    handleRowSelection (rows) {
         this.setState({
-            selected: selectedRows
+            selected: rows
         });
 
-        console.log(selectedRows);
-        this.props.onSelectedRows(selectedRows);
+        this.props.onSelectedRows(rows);
     }
 
     updateOperationButtonVisibility (row, visibility) {
-        let cl = 'row' + row;
-        let domRow = document.getElementsByClassName(cl);
+        let clasName = 'row' + row;
+        let domRow = document.getElementsByClassName(clasName);
         let btn = domRow[0].getElementsByClassName('op');
         btn[0].style.visibility = visibility;
     }
 
     onRowHover (rowNumber) {
-        // let domOperationBtn = this.getOperationButton(rowNumber);
-        // domOperationBtn[0].style.visibility = 'visible';
         this.updateOperationButtonVisibility(rowNumber, 'visible');
     }
 
     onRowHoverExit (rowNumber) {
-        // let domOperationBtn = this.getOperationButton(rowNumber);
-        // domOperationBtn[0].style.visibility = 'hidden';
         this.updateOperationButtonVisibility(rowNumber, 'hidden');
     }
 
@@ -365,6 +355,18 @@ class AlarmList extends Component {
 
     onNextPage () {
         console.log('onNextPage');
+    }
+
+    onUpdate () {
+        this.setState({
+            needUpdate: true
+        })
+    }
+
+    componetDidUpdate () {
+        this.setState({
+            needUpdate: false
+        })
     }
 
     render () {
@@ -384,12 +386,13 @@ class AlarmList extends Component {
                 verticalAlign: 'middle'
             }
         }
+        console.log('AlarmList selectedRows: ' + this.props.selectedRows);
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div>
-                    <AlarmOperation />
-                    <Table multiSelectable={true} height={'200'} 
-                        onRowSelection={this.handleRowSelection} 
+                    <AlarmOperation alarmItems={this.props.alarmItems} selectedRows={this.props.selectedRows} update={this.onUpdate.bind(this)}/>
+                    <Table multiSelectable={true} height={'200'}
+                        onRowSelection={this.handleRowSelection.bind(this)}
                         onRowHover={this.onRowHover.bind(this)}
                         onRowHoverExit={this.onRowHoverExit.bind(this)}>
                         <TableBody showRowHover={true} displayRowCheckbox={false}>
@@ -439,8 +442,8 @@ class AlarmList extends Component {
                                     <b>共：{this.props.alarmItems.length} 条报警</b>
                                 </TableRowColumn>
                                 <TableRowColumn style={rowStyles.footer}>
-                                    <IconPrevious diabled={true} onClick={this.onPreviousPage.bind(this)} />
-                                    <IconNext diabled={false} onClick={this.onNextPage.bind(this)}/>
+                                    <IconPrevious disabled={true} onClick={this.onPreviousPage.bind(this)} />
+                                    <IconNext disabled={false} onClick={this.onNextPage.bind(this)}/>
                                 </TableRowColumn >
                             </TableRow>
                         </TableFooter>
@@ -457,10 +460,10 @@ class AlarmEntryInfo extends Component {
     }
 
     render () {
-        let itemName = this.props.currentSelected === null ? '' : this.props.currentSelected.tagName;
-        let itemDesc = this.props.currentSelected === null ? '' : this.props.currentSelected.tagDesc;
-        let priority = this.props.currentSelected === null ? '' : this.props.currentSelected.priority;
-        let dispose = this.props.currentSelected === null ? '' : `需关闭设备 ${this.props.currentSelected.device}，进行检修！`;
+        let itemName = this.props.lastSelectedRow === null ? '' : this.props.lastSelectedRow.tagName;
+        let itemDesc = this.props.lastSelectedRow === null ? '' : this.props.lastSelectedRow.tagDesc;
+        let priority = this.props.lastSelectedRow === null ? '' : this.props.lastSelectedRow.priority;
+        let dispose = this.props.lastSelectedRow === null ? '' : `需关闭设备 ${this.props.lastSelectedRow.device}，进行检修！`;
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div style={{'margin': 10}}>
@@ -480,17 +483,18 @@ class RealtimeAlarm extends Component {
         this.state = {
             currentShowItems: [
                 {tagName: 'AA', creationTime: '2017/6/15 12:00:03', almType: 'H', tagDesc: 'This is AA description', device: 'B', priority: 0, acked: false},
-                {tagName: 'BB', creationTime: '2017/6/15 12:01:14', almType: 'LL', tagDesc: 'This is BB description', device: 'A', priority: 0, acked: true},
+                {tagName: 'BB', creationTime: '2017/6/15 12:01:14', almType: 'LL', tagDesc: 'This is BB description', device: 'A', priority: 0, acked: false},
                 {tagName: 'CC', creationTime: '2017/6/15 12:05:23', almType: 'HH', tagDesc: 'This is CC description', device: 'B', priority: 0, acked: false},
-                {tagName: 'DD', creationTime: '2017/6/15 12:10:35', almType: 'L', tagDesc: 'This is DD description', device: 'A', priority: 0, acked: true},
-                {tagName: 'EE', creationTime: '2017/6/15 12:20:03', almType: 'HH', tagDesc: 'This is EE description', device: 'B', priority: 31, acked: true},
+                {tagName: 'DD', creationTime: '2017/6/15 12:10:35', almType: 'L', tagDesc: 'This is DD description', device: 'A', priority: 0, acked: false},
+                {tagName: 'EE', creationTime: '2017/6/15 12:20:03', almType: 'HH', tagDesc: 'This is EE description', device: 'B', priority: 31, acked: false},
                 {tagName: 'FF', creationTime: '2017/6/15 12:30:45', almType: 'LL', tagDesc: 'This is FF description', device: 'A', priority: 31, acked: false},
-                {tagName: 'GG', creationTime: '2017/6/15 12:45:00', almType: 'H', tagDesc: 'This is GG description', device: 'B', priority: 31, acked: true},
+                {tagName: 'GG', creationTime: '2017/6/15 12:45:00', almType: 'H', tagDesc: 'This is GG description', device: 'B', priority: 31, acked: false},
                 {tagName: 'HH', creationTime: '2017/6/15 13:03:03', almType: 'HH', tagDesc: 'This is HH description', device: 'A', priority: 31, acked: false},
-                {tagName: 'II', creationTime: '2017/6/15 13:05:56', almType: 'L', tagDesc: 'This is II description', device: 'B', priority: 31, acked: true}
+                {tagName: 'II', creationTime: '2017/6/15 13:05:56', almType: 'L', tagDesc: 'This is II description', device: 'B', priority: 31, acked: false}
             ],
             alarmItems: [],
-            currentSelected: null,
+            lastSelectedRow: null,
+            selectedRows: [],
             filterData: [
                 {
                     name: '所有报警',
@@ -530,14 +534,15 @@ class RealtimeAlarm extends Component {
         });
     }
 
-    onAlarmItemSelected (selectedRows) {
-        if (selectedRows === 'undefined' || selectedRows.length <= 0) {
+    onAlarmItemSelected (selectedAlarms) {
+        if (selectedAlarms === 'undefined' || selectedAlarms.length <= 0) {
             return;
         }
-        let [lastItem, ...middleItems] = [...selectedRows].reverse();
+        let [lastItem, ...middleItems] = [...selectedAlarms].reverse();
         this.setState({
-            currentSelected: this.state.currentShowItems[lastItem]
-        }, () => { console.log(this.state.currentSelected); });
+            lastSelectedRow: this.state.currentShowItems[lastItem],
+            selectedRows: selectedAlarms
+        }, () => { console.log(this.state.lastSelectedRow); });
     }
 
     filterFlatten (filterItems) {
@@ -596,9 +601,10 @@ class RealtimeAlarm extends Component {
                     <ControlHeader />
                     <FilterTree filterData={this.state.filterData} onFilter={this.onAlarmFilter.bind(this)}/>
                     <div style={styles.alarmContent}>
-                        <AlarmList alarmItems={this.state.currentShowItems} onSelectedRows={this.onAlarmItemSelected.bind(this)}/>
+                        <AlarmList alarmItems={this.state.currentShowItems} onSelectedRows={this.onAlarmItemSelected.bind(this)}
+                                   selectedRows={this.state.selectedRows}/>
                         <Divider />
-                        <AlarmEntryInfo currentSelected={this.state.currentSelected}/>
+                        <AlarmEntryInfo lastSelectedRow={this.state.lastSelectedRow}/>
                     </div>
                 </div>
             </MuiThemeProvider>
