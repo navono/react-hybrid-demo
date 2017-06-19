@@ -2,7 +2,7 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 13:29:01
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-16 16:56:07
+ * @Last Modified time: 2017-06-19 10:29:16
  *
  * @Description
  * real time alarm control
@@ -53,7 +53,7 @@ const styles = {
         'float': 'left',
         'width': '20%',
         'height': '410',
-        'border': '1px solid green',
+        // 'border': '1px solid green',
         'margin': 0
     },
     filterTreeSubHeader: {
@@ -84,6 +84,11 @@ const buttonStyle = {
 // });
 
 const muiTheme = getMuiTheme(lightBaseTheme);
+
+const FilterType = {
+    priority: Symbol('priority'),
+    device: Symbol('device')
+}
 
 const IconDone = (props) => (
     <IconButton tooltip='Ack'>
@@ -207,8 +212,8 @@ class FilterTree extends Component {
                         items.push(<ListItem key={element} value={this.state.valueIndex}
                             primaryText={element.name} leftIcon={<ContentInbox/>}
                             nestedItems={nestedItem}/>);
+                        this.state.valueIndex++;
                     }
-                    this.state.valueIndex++;
                 } else if (element.icon === 'ActionGrade') {
                     if (element.subItems.length !== 0) {
                         items.push(<ListItem key={element} value={this.state.valueIndex}
@@ -219,8 +224,8 @@ class FilterTree extends Component {
                         items.push(<ListItem key={element} value={this.state.valueIndex}
                             primaryText={element.name} leftIcon={<ActionGrade/>}
                             nestedItems={nestedItem}/>);
+                        this.state.valueIndex++;
                     }
-                    this.state.valueIndex++;
                 }
             }
             return items;
@@ -335,20 +340,23 @@ class AlarmList extends Component {
         this.props.onSelectedRows(selectedRows);
     }
 
-    getOperationButton (row) {
+    updateOperationButtonVisibility (row, visibility) {
         let cl = 'row' + row;
         let domRow = document.getElementsByClassName(cl);
-        return domRow[0].getElementsByClassName('op');
+        let btn = domRow[0].getElementsByClassName('op');
+        btn[0].style.visibility = visibility;
     }
 
     onRowHover (rowNumber) {
         // let domOperationBtn = this.getOperationButton(rowNumber);
         // domOperationBtn[0].style.visibility = 'visible';
+        this.updateOperationButtonVisibility(rowNumber, 'visible');
     }
 
     onRowHoverExit (rowNumber) {
         // let domOperationBtn = this.getOperationButton(rowNumber);
         // domOperationBtn[0].style.visibility = 'hidden';
+        this.updateOperationButtonVisibility(rowNumber, 'hidden');
     }
 
     onPreviousPage () {
@@ -452,13 +460,14 @@ class AlarmEntryInfo extends Component {
         let itemName = this.props.currentSelected === null ? '' : this.props.currentSelected.tagName;
         let itemDesc = this.props.currentSelected === null ? '' : this.props.currentSelected.tagDesc;
         let priority = this.props.currentSelected === null ? '' : this.props.currentSelected.priority;
+        let dispose = this.props.currentSelected === null ? '' : `需关闭设备 ${this.props.currentSelected.device}，进行检修！`;
         return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div style={{'margin': 10}}>
                     <p>报警名称：{itemName}</p>
                     <p>报警描述：{itemDesc}</p>
                     <p>报警优先级：{priority}</p>
-                    <p>报警风险等级：</p>
+                    <p>报警处置：{dispose}</p>
                 </div>
             </MuiThemeProvider>
         )
@@ -470,15 +479,15 @@ class RealtimeAlarm extends Component {
         super(props, context);
         this.state = {
             currentShowItems: [
-                {tagName: 'AA', creationTime: '2017/6/15 12:00:03', almType: 'H', tagDesc: 'This is AA description', priority: 0, acked: false},
-                {tagName: 'BB', creationTime: '2017/6/15 12:01:14', almType: 'LL', tagDesc: 'This is BB description', priority: 0, acked: true},
-                {tagName: 'CC', creationTime: '2017/6/15 12:05:23', almType: 'HH', tagDesc: 'This is CC description', priority: 0, acked: false},
-                {tagName: 'DD', creationTime: '2017/6/15 12:10:35', almType: 'L', tagDesc: 'This is DD description', priority: 0, acked: true},
-                {tagName: 'EE', creationTime: '2017/6/15 12:20:03', almType: 'HH', tagDesc: 'This is EE description', priority: 31, acked: true},
-                {tagName: 'FF', creationTime: '2017/6/15 12:30:45', almType: 'LL', tagDesc: 'This is FF description', priority: 31, acked: false},
-                {tagName: 'GG', creationTime: '2017/6/15 12:45:00', almType: 'H', tagDesc: 'This is GG description', priority: 31, acked: true},
-                {tagName: 'HH', creationTime: '2017/6/15 13:03:03', almType: 'HH', tagDesc: 'This is HH description', priority: 31, acked: false},
-                {tagName: 'II', creationTime: '2017/6/15 13:05:56', almType: 'L', tagDesc: 'This is II description', priority: 31, acked: true}
+                {tagName: 'AA', creationTime: '2017/6/15 12:00:03', almType: 'H', tagDesc: 'This is AA description', device: 'B', priority: 0, acked: false},
+                {tagName: 'BB', creationTime: '2017/6/15 12:01:14', almType: 'LL', tagDesc: 'This is BB description', device: 'A', priority: 0, acked: true},
+                {tagName: 'CC', creationTime: '2017/6/15 12:05:23', almType: 'HH', tagDesc: 'This is CC description', device: 'B', priority: 0, acked: false},
+                {tagName: 'DD', creationTime: '2017/6/15 12:10:35', almType: 'L', tagDesc: 'This is DD description', device: 'A', priority: 0, acked: true},
+                {tagName: 'EE', creationTime: '2017/6/15 12:20:03', almType: 'HH', tagDesc: 'This is EE description', device: 'B', priority: 31, acked: true},
+                {tagName: 'FF', creationTime: '2017/6/15 12:30:45', almType: 'LL', tagDesc: 'This is FF description', device: 'A', priority: 31, acked: false},
+                {tagName: 'GG', creationTime: '2017/6/15 12:45:00', almType: 'H', tagDesc: 'This is GG description', device: 'B', priority: 31, acked: true},
+                {tagName: 'HH', creationTime: '2017/6/15 13:03:03', almType: 'HH', tagDesc: 'This is HH description', device: 'A', priority: 31, acked: false},
+                {tagName: 'II', creationTime: '2017/6/15 13:05:56', almType: 'L', tagDesc: 'This is II description', device: 'B', priority: 31, acked: true}
             ],
             alarmItems: [],
             currentSelected: null,
@@ -496,9 +505,20 @@ class RealtimeAlarm extends Component {
                     filterValue: '',
                     icon: 'ActionGrade',
                     subItems: [
-                        {name: '优先级0', filterKey: 'priority', filterValue: '0', icon: 'ActionGrade', subItems: []},
-                        {name: '优先级31', filterKey: 'priority', filterValue: '31', icon: 'ActionGrade', subItems: []}
-                    ]}
+                        {name: '优先级0', filterKey: FilterType.priority, filterValue: '0', icon: 'ActionGrade', subItems: []},
+                        {name: '优先级31', filterKey: FilterType.priority, filterValue: '31', icon: 'ActionGrade', subItems: []}
+                    ]
+                },
+                {
+                    name: '设备',
+                    filterKey: '',
+                    filterValue: '',
+                    icon: 'ActionGrade',
+                    subItems: [
+                        {name: '设备A', filterKey: FilterType.device, filterValue: 'A', icon: 'ActionGrade', subItems: []},
+                        {name: '设备B', filterKey: FilterType.device, filterValue: 'B', icon: 'ActionGrade', subItems: []}
+                    ]
+                }
             ],
             flattenFilters: []
         }
@@ -542,18 +562,18 @@ class RealtimeAlarm extends Component {
     onAlarmFilter (currentFilterIndex) {
         // 在界面显示的时候，是按照顺序往下递增，而filterData只计算第一层的item数，且filterData会递归
         // 因此需要那一个一维的数组保存所有的filter数据，也就是所谓的Array Flatten
-
         if (this.state.flattenFilters.length === 0) {
             this.filterFlatten(this.state.filterData);
         }
 
         // 保存原始的所有数据
-
-        if (currentFilterIndex >= 0 && currentFilterIndex <= this.state.filterData.length) {
+        if (currentFilterIndex >= 0 && currentFilterIndex <= this.state.flattenFilters.length) {
             let currentFilter = this.state.flattenFilters[currentFilterIndex];
             let newAlarmItems = this.state.alarmItems.filter((alarm) => {
-                if (currentFilter.filterKey === 'priority') {
+                if (currentFilter.filterKey === FilterType.priority) {
                     return currentFilter.filterValue == alarm.priority;
+                } else if (currentFilter.filterKey === FilterType.device) {
+                    return currentFilter.filterValue == alarm.device;
                 }
             });
 

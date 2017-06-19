@@ -55,7 +55,7 @@ class App extends Component {
                     </p>
                 </Grid>
               </Jumbotron>
-              <Grid><MaterialMain/></Grid>
+              {/* <Grid><MaterialMain/></Grid> */}
               <Grid><RealtimeAlarm/></Grid>
               <Grid><TodoBox /></Grid>
               <div><SemanticList /></div>
