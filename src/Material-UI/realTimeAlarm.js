@@ -2,7 +2,7 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 13:29:01
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-19 16:15:28
+ * @Last Modified time: 2017-06-20 10:54:57
  *
  * @Description
  * real time alarm control
@@ -135,6 +135,7 @@ function wrapState (ComposedComponent) {
     class SelectableList extends Component {
         constructor (props, context) {
             super(props, context);
+            this.handleRequestChange = this.handleRequestChange.bind(this);
         }
 
         componentWillMount () {
@@ -155,7 +156,7 @@ function wrapState (ComposedComponent) {
             return (
                 <ComposedComponent
                     value={this.state.selectedIndex}
-                    onChange={this.handleRequestChange.bind(this)}>
+                    onChange={this.handleRequestChange}>
                     {this.props.children}
                 </ComposedComponent>)
         }
@@ -178,6 +179,7 @@ class FilterTree extends Component {
             valueIndex: 0,
             items: []
         }
+        this.onSelectChanged = this.onSelectChanged.bind(this);
     }
 
     componentWillMount () {
@@ -243,7 +245,7 @@ class FilterTree extends Component {
                         { this.state.items }
                     </SelectableList> */}
                     <div style={{overflow: 'auto', height: '100%'}}>
-                        <SelectableList onChanged={this.onSelectChanged.bind(this)}>
+                        <SelectableList onChanged={this.onSelectChanged}>
                             { this.state.items }
                         </SelectableList>
                     </div>
@@ -259,6 +261,12 @@ class AlarmOperation extends Component {
         this.state = {
             alarmPrint: false
         }
+
+        this.onPrint = this.onPrint.bind(this);
+        this.onPrintDlgClose = this.onPrintDlgClose.bind(this);
+        this.onAck = this.onAck.bind(this);
+        this.onAckAll = this.onAckAll.bind(this);
+        this.onFreeze = this.onFreeze.bind(this);
     }
 
     onPrint () {
@@ -286,8 +294,8 @@ class AlarmOperation extends Component {
 
     render () {
         const standardActions = [
-            <FlatButton label='OK' primary={true} onTouchTap={this.onPrintDlgClose.bind(this)}/>,
-            <FlatButton label='CANCEL' primary={true} keyboardFocused={true} onTouchTap={this.onPrintDlgClose.bind(this)}/>
+            <FlatButton label='OK' primary={true} onTouchTap={this.onPrintDlgClose}/>,
+            <FlatButton label='CANCEL' primary={true} keyboardFocused={true} onTouchTap={this.onPrintDlgClose}/>
         ];
 
         return (
@@ -295,13 +303,13 @@ class AlarmOperation extends Component {
                 <div style={styles.noPaddingMargin}>
                     <Dialog title="打印" modal={false} actions={standardActions}
                         open={this.state.alarmPrint}
-                        onRequestClose={this.onPrintDlgClose.bind(this)}>准备打印报警！</Dialog>
+                        onRequestClose={this.onPrintDlgClose}>准备打印报警！</Dialog>
 
-                    <IconDone disabled={false} onClick={this.onAck.bind(this)}/>
-                    <RaisedButton label='确认所有' style={buttonStyle} primary={true} onTouchTap={this.onAckAll.bind(this)}/>
-                    <RaisedButton label='冻结' style={buttonStyle} primary={true} onTouchTap={this.onFreeze.bind(this)}/>
-                    <RaisedButton label='消音' style={buttonStyle} secondary={true} onTouchTap={this.onPrint.bind(this)}/>
-                    <RaisedButton label='打印' style={buttonStyle} secondary={true} onTouchTap={this.onPrint.bind(this)}/>
+                    <IconDone disabled={false} onClick={this.onAck}/>
+                    <RaisedButton label='确认所有' style={buttonStyle} primary={true} onTouchTap={this.onAckAll}/>
+                    <RaisedButton label='冻结' style={buttonStyle} primary={true} onTouchTap={this.onFreeze}/>
+                    <RaisedButton label='消音' style={buttonStyle} secondary={true} onTouchTap={this.onPrint}/>
+                    <RaisedButton label='打印' style={buttonStyle} secondary={true} onTouchTap={this.onPrint}/>
                 </div>
             </MuiThemeProvider>
         )
@@ -314,6 +322,12 @@ class AlarmList extends Component {
         this.state = {
             selected: []
         };
+
+        this.onRowHover = this.onRowHover.bind(this);
+        this.onRowHoverExit = this.onRowHoverExit.bind(this);
+        this.onPreviousPage = this.onPreviousPage.bind(this);
+        this.onNextPage = this.onNextPage.bind(this);
+        this.onAckAlarms = this.onAckAlarms.bind(this);
     }
 
     isSelected (index) {
@@ -377,11 +391,11 @@ class AlarmList extends Component {
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div>
                     <AlarmOperation alarmItems={this.props.alarmItems}
-                                    selectedRows={this.props.selectedRows} onAckAlarms={this.onAckAlarms.bind(this)}/>
+                                    selectedRows={this.props.selectedRows} onAckAlarms={this.onAckAlarms}/>
                     <Table multiSelectable={true} height={'200'}
-                        onRowSelection={this.handleRowSelection.bind(this)}
-                        onRowHover={this.onRowHover.bind(this)}
-                        onRowHoverExit={this.onRowHoverExit.bind(this)}>
+                        onRowSelection={this.handleRowSelection}
+                        onRowHover={this.onRowHover}
+                        onRowHoverExit={this.onRowHoverExit}>
                         <TableBody showRowHover={true} displayRowCheckbox={false}>
                             {this.props.alarmItems.map((row, index) => {
                                 let refName = 'row' + index;
@@ -429,8 +443,8 @@ class AlarmList extends Component {
                                     <b>共：{this.props.alarmItems.length} 条报警</b>
                                 </TableRowColumn>
                                 <TableRowColumn style={rowStyles.footer}>
-                                    <IconPrevious disabled={true} onClick={this.onPreviousPage.bind(this)} />
-                                    <IconNext disabled={false} onClick={this.onNextPage.bind(this)}/>
+                                    <IconPrevious disabled={true} onClick={this.onPreviousPage} />
+                                    <IconNext disabled={false} onClick={this.onNextPage.bind}/>
                                 </TableRowColumn >
                             </TableRow>
                         </TableFooter>
@@ -522,6 +536,10 @@ class RealtimeAlarm extends Component {
             ],
             flattenFilters: []
         }
+
+        this.onAlarmFilter = this.onAlarmFilter.bind(this);
+        this.onAlarmItemSelected = this.onAlarmItemSelected.bind(this);
+        this.onUpdateAlarms = this.onUpdateAlarms.bind(this);
     }
 
     componentWillMount () {
@@ -614,10 +632,10 @@ class RealtimeAlarm extends Component {
             <MuiThemeProvider muiTheme={muiTheme} >
                 <div style={styles.container}>
                     <ControlHeader />
-                    <FilterTree filterData={this.state.filterData} onFilter={this.onAlarmFilter.bind(this)}/>
+                    <FilterTree filterData={this.state.filterData} onFilter={this.onAlarmFilter}/>
                     <div style={styles.alarmContent}>
-                        <AlarmList alarmItems={this.state.currentShowItems} onSelectedRows={this.onAlarmItemSelected.bind(this)}
-                                   selectedRows={this.state.selectedRows} onUpdateAlarms={this.onUpdateAlarms.bind(this)}/>
+                        <AlarmList alarmItems={this.state.currentShowItems} onSelectedRows={this.onAlarmItemSelected}
+                                   selectedRows={this.state.selectedRows} onUpdateAlarms={this.onUpdateAlarms}/>
                         <Divider />
                         <AlarmEntryInfo lastSelectedRow={this.state.lastSelectedRow}/>
                     </div>
