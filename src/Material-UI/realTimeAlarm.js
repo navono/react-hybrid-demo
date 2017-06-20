@@ -2,7 +2,7 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 13:29:01
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-20 10:54:57
+ * @Last Modified time: 2017-06-20 11:12:37
  *
  * @Description
  * real time alarm control
@@ -206,24 +206,24 @@ class FilterTree extends Component {
 
                 if (element.icon === 'ContentInbox') {
                     if (element.subItems.length !== 0) {
-                        items.push(<ListItem key={element} value={this.state.valueIndex}
+                        items.push(<ListItem key={index.toString()} value={this.state.valueIndex}
                             primaryText={element.name} leftIcon={<ContentInbox/>}
                             primaryTogglesNestedList={true}
                             nestedItems={nestedItem}/>);
                     } else {
-                        items.push(<ListItem key={element} value={this.state.valueIndex}
+                        items.push(<ListItem key={index.toString()} value={this.state.valueIndex}
                             primaryText={element.name} leftIcon={<ContentInbox/>}
                             nestedItems={nestedItem}/>);
                         this.state.valueIndex++;
                     }
                 } else if (element.icon === 'ActionGrade') {
                     if (element.subItems.length !== 0) {
-                        items.push(<ListItem key={element} value={this.state.valueIndex}
+                        items.push(<ListItem key={index.toString()} value={this.state.valueIndex}
                             primaryText={element.name} leftIcon={<ActionGrade/>}
                             primaryTogglesNestedList={true}
                             nestedItems={nestedItem}/>);
                     } else {
-                        items.push(<ListItem key={element} value={this.state.valueIndex}
+                        items.push(<ListItem key={index.toString()} value={this.state.valueIndex}
                             primaryText={element.name} leftIcon={<ActionGrade/>}
                             nestedItems={nestedItem}/>);
                         this.state.valueIndex++;
