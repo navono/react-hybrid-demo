@@ -2,17 +2,19 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Grid, Navbar, Jumbotron, Button } from 'react-bootstrap';
 import logo from './logo.svg';
-// import './App.css';
-import TodoBox from './Flux/components/todoList';
-import MyButtonController from './Flux/components/MyButtonController';
+import './App.css';
+
+// import TodoBox from './Flux/components/todoList';
+// import MyButtonController from './Flux/components/MyButtonController';
 
 import MaterialMain from './Material-UI/material-ui-demo';
 import RealtimeAlarm from './Material-UI/realTimeAlarm';
 import TestPage from './Material-UI/testCSS';
 
-import SemanticList, { SemanticListIcon, SemanticTable } from './Semantic-UI/semantic-ui-demo';
+// import SemanticList, { SemanticListIcon, SemanticTable } from './Semantic-UI/semantic-ui-demo';
 
-import SemanticAlarmControl from './Semantic-UI/realTimeAlarm'
+// import SemanticAlarmControl from './Semantic-UI/realTimeAlarm';
+// import SiderDemo from './antd/testAntd';
 
 class App extends Component {
   /* render() {
@@ -28,8 +30,16 @@ class App extends Component {
       </div>
     );
   } */
-    render () {
-        return (
+
+    // render () {
+    //     return (
+    //       <div>
+    //           <SiderDemo />
+    //       </div>
+    //     );
+    // }
+  render () {
+    return (
             <div>
               <Navbar inverse fixedTop>
                 <Grid>
@@ -55,13 +65,12 @@ class App extends Component {
                     </p>
                 </Grid>
               </Jumbotron>
-              {/* <Grid><MaterialMain/></Grid> */}
+               <Grid><TestPage/></Grid>
               <Grid><RealtimeAlarm/></Grid>
-              <Grid><TodoBox /></Grid>
-              <div><SemanticList /></div>
+              {/* <div><SemanticList /></div> */}
             </div>
-        )
-    }
+      )
+  }
 }
 
 export default App;

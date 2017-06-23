@@ -2,14 +2,28 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 13:29:01
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-20 11:12:37
+ * @Last Modified time: 2017-06-23 08:54:17
  *
  * @Description
  * real time alarm control
  */
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { RaisedButton, IconButton, IconMenu, MenuItem, Dialog, FlatButton, List, ListItem, makeSelectable, Subheader, Divider, Paper, FontIcon } from 'material-ui';
+import {
+  RaisedButton,
+  IconButton,
+  IconMenu,
+  MenuItem,
+  Dialog,
+  FlatButton,
+  List,
+  ListItem,
+  makeSelectable,
+  Subheader,
+  Divider,
+  Paper,
+  FontIcon
+} from 'material-ui';
 import { ContentInbox, ActionGrade } from 'material-ui/svg-icons';
 
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
@@ -19,22 +33,22 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowCol
 import SvgIcon from 'material-ui/SvgIcon';
 
 const styles = {
-    container: {
+  container: {
         // 'textAlign': 'center',
         // 'border': '1px coral solid',
         // 'width': '100%',
         // 'height': '500px',
         // 'margin-left': 'auto',
         // 'margin-right': 'auto'
-        'width': '90%',
-        'margin': '10px auto',
-        'backgroundColor': '#fff',
-        'color': '#333',
-        'border': '1px solid gray',
-        'maxHeight': '700',
-        'lineHeight': '100%'
-    },
-    header: {
+    'width': '90%',
+    'margin': '10px auto',
+    'backgroundColor': '#fff',
+    'color': '#333',
+    'border': '1px solid gray',
+    'maxHeight': '700',
+    'lineHeight': '100%'
+  },
+  header: {
         // 'height': '8%',
         // 'width': '100%',
         // 'border-radius': 25,
@@ -42,39 +56,39 @@ const styles = {
         // 'background': '#dddddd',
         // 'word-wrap': 'break-word',
         // 'line-height': 38
-        'padding': '.5em',
-        'textAlign': 'center',
+    'padding': '.5em',
+    'textAlign': 'center',
         // 'line-height'
-        'backgroundColor': '#ddd',
-        'borderBottom': '1px solid gray'
-    },
-    filterTree: {
-        'textAlign': 'left',
-        'float': 'left',
-        'width': '20%',
-        'height': '410',
+    'backgroundColor': '#ddd',
+    'borderBottom': '1px solid gray'
+  },
+  filterTree: {
+    'textAlign': 'left',
+    'float': 'left',
+    'width': '20%',
+    'height': '410',
         // 'border': '1px solid green',
-        'margin': 0
-    },
-    filterTreeSubHeader: {
-        'textAlign': 'left'
-    },
-    alarmContent: {
-        'marginLeft': '20%',
-        'borderLeft': '1px solid gray',
+    'margin': 0
+  },
+  filterTreeSubHeader: {
+    'textAlign': 'left'
+  },
+  alarmContent: {
+    'marginLeft': '20%',
+    'borderLeft': '1px solid gray',
         // 'background-color': '#ddd',
-        'padding': '0 1em 1em 1em'
+    'padding': '0 1em 1em 1em'
         // 'max-width': '36em'
-    },
-    noPaddingMargin: {
+  },
+  noPaddingMargin: {
         // 'background-color': '#ddd',
-        'padding': 0,
-        'margin': 0
-    }
+    'padding': 0,
+    'margin': 0
+  }
 };
 
 const buttonStyle = {
-    'margin': 7
+  'margin': 7
 }
 
 // const muiTheme = getMuiTheme({
@@ -86,8 +100,8 @@ const buttonStyle = {
 const muiTheme = getMuiTheme(lightBaseTheme);
 
 const FilterType = {
-    priority: Symbol('priority'),
-    device: Symbol('device')
+  priority: Symbol('priority'),
+  device: Symbol('device')
 }
 
 const IconDone = ({props, disabled, onClick}) => (
@@ -115,128 +129,128 @@ const IconPrevious = ({props, disabled, onClick}) => (
 )
 
 class ControlHeader extends Component {
-    constructor (props, context) {
-        super(props, context);
-    }
+  constructor (props, context) {
+    super(props, context);
+  }
 
-    render () {
-        return (
+  render () {
+    return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div style={styles.header}>
                     <p style={styles.noPaddingMargin}><b>Realtime Alarm Control</b></p>
                 </div>
             </MuiThemeProvider>
-        )
-    }
+    )
+  }
 }
 
 let SelectableList = makeSelectable(List);
 function wrapState (ComposedComponent) {
-    class SelectableList extends Component {
-        constructor (props, context) {
-            super(props, context);
-            this.handleRequestChange = this.handleRequestChange.bind(this);
-        }
+  class SelectableList extends Component {
+    constructor (props, context) {
+      super(props, context);
+      this.handleRequestChange = this.handleRequestChange.bind(this);
+    }
 
-        componentWillMount () {
-            this.setState({
-                selectedIndex: this.props.defaultValue
-            });
-        }
+    componentWillMount () {
+      this.setState({
+        selectedIndex: this.props.defaultValue
+      });
+    }
 
-        handleRequestChange (event, index) {
-            this.setState({
-                selectedIndex: index
-            });
+    handleRequestChange (event, index) {
+      this.setState({
+        selectedIndex: index
+      });
 
-            this.props.onChanged(index);
-        }
+      this.props.onChanged(index);
+    }
 
-        render () {
-            return (
+    render () {
+      return (
                 <ComposedComponent
                     value={this.state.selectedIndex}
                     onChange={this.handleRequestChange}>
                     {this.props.children}
                 </ComposedComponent>)
-        }
+    }
     }
 
-    SelectableList.PropTypes = {
-        children: React.PropTypes.node.isRequired,
-        defaultValue: React.PropTypes.number.isRequired
-    }
+  SelectableList.PropTypes = {
+    children: React.PropTypes.node.isRequired,
+    defaultValue: React.PropTypes.number.isRequired
+  }
 
-    return SelectableList;
+  return SelectableList;
 }
 
 SelectableList = wrapState(SelectableList);
 
 class FilterTree extends Component {
-    constructor (props, context) {
-        super(props, context);
-        this.state = {
-            valueIndex: 0,
-            items: []
-        }
-        this.onSelectChanged = this.onSelectChanged.bind(this);
+  constructor (props, context) {
+    super(props, context);
+    this.state = {
+      valueIndex: 0,
+      items: []
     }
+    this.onSelectChanged = this.onSelectChanged.bind(this);
+  }
 
-    componentWillMount () {
-        let items = this.createListItems(this.props.filterData);
-        this.setState({
-            items: items
-        })
-    }
+  componentWillMount () {
+    let items = this.createListItems(this.props.filterData);
+    this.setState({
+      items: items
+    })
+  }
 
-    onSelectChanged (param) {
-        this.props.onFilter(param);
-    }
+  onSelectChanged (param) {
+    this.props.onFilter(param);
+  }
 
-    createListItems (filterData) {
+  createListItems (filterData) {
         // 无法使用Array的map，因为在map的过程中无法递归调用
-        if (filterData !== 'undefined') {
-            let items = [];
-            for (var index = 0; index < filterData.length; index++) {
-                var element = filterData[index];
-                let nestedItem;
-                if (element.subItems.length !== 0) {
-                    nestedItem = this.createListItems(element.subItems);
-                }
-
-                if (element.icon === 'ContentInbox') {
-                    if (element.subItems.length !== 0) {
-                        items.push(<ListItem key={index.toString()} value={this.state.valueIndex}
-                            primaryText={element.name} leftIcon={<ContentInbox/>}
-                            primaryTogglesNestedList={true}
-                            nestedItems={nestedItem}/>);
-                    } else {
-                        items.push(<ListItem key={index.toString()} value={this.state.valueIndex}
-                            primaryText={element.name} leftIcon={<ContentInbox/>}
-                            nestedItems={nestedItem}/>);
-                        this.state.valueIndex++;
-                    }
-                } else if (element.icon === 'ActionGrade') {
-                    if (element.subItems.length !== 0) {
-                        items.push(<ListItem key={index.toString()} value={this.state.valueIndex}
-                            primaryText={element.name} leftIcon={<ActionGrade/>}
-                            primaryTogglesNestedList={true}
-                            nestedItems={nestedItem}/>);
-                    } else {
-                        items.push(<ListItem key={index.toString()} value={this.state.valueIndex}
-                            primaryText={element.name} leftIcon={<ActionGrade/>}
-                            nestedItems={nestedItem}/>);
-                        this.state.valueIndex++;
-                    }
-                }
-            }
-            return items;
+    if (filterData !== 'undefined') {
+      let items = [];
+      for (var index = 0; index < filterData.length; index++) {
+        var element = filterData[index];
+        let nestedItem;
+        if (element.subItems.length !== 0) {
+          nestedItem = this.createListItems(element.subItems);
         }
-        return null;
-    }
 
-    render () {
-        return (
+        if (element.icon === 'ContentInbox') {
+          if (element.subItems.length !== 0) {
+            items.push(<ListItem key={index.toString()} value={this.state.valueIndex}
+                            primaryText={element.name} leftIcon={<ContentInbox/>}
+                            primaryTogglesNestedList={true}
+                            nestedItems={nestedItem}/>);
+          } else {
+            items.push(<ListItem key={index.toString()} value={this.state.valueIndex}
+                            primaryText={element.name} leftIcon={<ContentInbox/>}
+                            nestedItems={nestedItem}/>);
+            this.state.valueIndex++;
+          }
+        } else if (element.icon === 'ActionGrade') {
+          if (element.subItems.length !== 0) {
+            items.push(<ListItem key={index.toString()} value={this.state.valueIndex}
+                            primaryText={element.name} leftIcon={<ActionGrade/>}
+                            primaryTogglesNestedList={true}
+                            nestedItems={nestedItem}/>);
+          } else {
+            items.push(<ListItem key={index.toString()} value={this.state.valueIndex}
+                            primaryText={element.name} leftIcon={<ActionGrade/>}
+                            nestedItems={nestedItem}/>);
+            this.state.valueIndex++;
+          }
+        }
+      }
+      return items;
+    }
+    return null;
+  }
+
+  render () {
+    return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div style={styles.filterTree}>
                     {/* <SelectableList onChanged={this.onSelectChanged.bind(this)} style={{maxHeight: 200, overflow: 'auto'}}>
@@ -251,54 +265,54 @@ class FilterTree extends Component {
                     </div>
                 </div>
             </MuiThemeProvider>
-        )
-    }
+    )
+  }
 }
 
 class AlarmOperation extends Component {
-    constructor (props, context) {
-        super(props, context);
-        this.state = {
-            alarmPrint: false
-        }
-
-        this.onPrint = this.onPrint.bind(this);
-        this.onPrintDlgClose = this.onPrintDlgClose.bind(this);
-        this.onAck = this.onAck.bind(this);
-        this.onAckAll = this.onAckAll.bind(this);
-        this.onFreeze = this.onFreeze.bind(this);
+  constructor (props, context) {
+    super(props, context);
+    this.state = {
+      alarmPrint: false
     }
 
-    onPrint () {
-        this.setState({
-            alarmPrint: true
-        })
-    }
+    this.onPrint = this.onPrint.bind(this);
+    this.onPrintDlgClose = this.onPrintDlgClose.bind(this);
+    this.onAck = this.onAck.bind(this);
+    this.onAckAll = this.onAckAll.bind(this);
+    this.onFreeze = this.onFreeze.bind(this);
+  }
 
-    onPrintDlgClose () {
-        this.setState({
-            alarmPrint: false
-        })
-    }
+  onPrint () {
+    this.setState({
+      alarmPrint: true
+    })
+  }
 
-    onAck () {
-        this.props.onAckAlarms(false);
-    }
+  onPrintDlgClose () {
+    this.setState({
+      alarmPrint: false
+    })
+  }
 
-    onAckAll () {
-        this.props.onAckAlarms(true);
-    }
+  onAck () {
+    this.props.onAckAlarms(false);
+  }
 
-    onFreeze () {
-    }
+  onAckAll () {
+    this.props.onAckAlarms(true);
+  }
 
-    render () {
-        const standardActions = [
-            <FlatButton label='OK' primary={true} onTouchTap={this.onPrintDlgClose}/>,
-            <FlatButton label='CANCEL' primary={true} keyboardFocused={true} onTouchTap={this.onPrintDlgClose}/>
-        ];
+  onFreeze () {
+  }
 
-        return (
+  render () {
+    const standardActions = [
+      <FlatButton label='OK' primary={true} onTouchTap={this.onPrintDlgClose}/>,
+      <FlatButton label='CANCEL' primary={true} keyboardFocused={true} onTouchTap={this.onPrintDlgClose}/>
+    ];
+
+    return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div style={styles.noPaddingMargin}>
                     <Dialog title="打印" modal={false} actions={standardActions}
@@ -312,82 +326,82 @@ class AlarmOperation extends Component {
                     <RaisedButton label='打印' style={buttonStyle} secondary={true} onTouchTap={this.onPrint}/>
                 </div>
             </MuiThemeProvider>
-        )
-    }
+    )
+  }
 }
 
 class AlarmList extends Component {
-    constructor (props, context) {
-        super(props, context);
-        this.state = {
-            selected: []
-        };
+  constructor (props, context) {
+    super(props, context);
+    this.state = {
+      selected: []
+    };
 
-        this.onRowHover = this.onRowHover.bind(this);
-        this.onRowHoverExit = this.onRowHoverExit.bind(this);
-        this.onPreviousPage = this.onPreviousPage.bind(this);
-        this.onNextPage = this.onNextPage.bind(this);
-        this.onAckAlarms = this.onAckAlarms.bind(this);
+    this.onRowHover = this.onRowHover.bind(this);
+    this.onRowHoverExit = this.onRowHoverExit.bind(this);
+    this.onPreviousPage = this.onPreviousPage.bind(this);
+    this.onNextPage = this.onNextPage.bind(this);
+    this.onAckAlarms = this.onAckAlarms.bind(this);
+  }
+
+  isSelected (index) {
+    return this.state.selected.indexOf(index) !== -1;
+  }
+
+  handleRowSelection (rows) {
+    this.setState({
+      selected: rows
+    });
+
+    this.props.onSelectedRows(rows);
+  }
+
+  updateOperationButtonVisibility (row, visibility) {
+    let clasName = 'row' + row;
+    let domRow = document.getElementsByClassName(clasName);
+    let btn = domRow[0].getElementsByClassName('op');
+    btn[0].style.visibility = visibility;
+  }
+
+  onRowHover (rowNumber) {
+    this.updateOperationButtonVisibility(rowNumber, 'visible');
+  }
+
+  onRowHoverExit (rowNumber) {
+    this.updateOperationButtonVisibility(rowNumber, 'hidden');
+  }
+
+  onPreviousPage () {
+    console.log('onPreviousPage');
+  }
+
+  onNextPage () {
+    console.log('onNextPage');
+  }
+
+  onAckAlarms (ackAll) {
+    this.props.onUpdateAlarms(ackAll);
+  }
+
+  render () {
+    const rowStyles = {
+      name: {
+        width: 30
+      },
+      alarmType: {
+        width: 30
+      },
+      creatationTime: {
+        width: 170
+      },
+      footer: {
+        margin: '0 0 0.5em 0',
+        textAlign: 'right',
+        verticalAlign: 'middle'
+      }
     }
-
-    isSelected (index) {
-        return this.state.selected.indexOf(index) !== -1;
-    }
-
-    handleRowSelection (rows) {
-        this.setState({
-            selected: rows
-        });
-
-        this.props.onSelectedRows(rows);
-    }
-
-    updateOperationButtonVisibility (row, visibility) {
-        let clasName = 'row' + row;
-        let domRow = document.getElementsByClassName(clasName);
-        let btn = domRow[0].getElementsByClassName('op');
-        btn[0].style.visibility = visibility;
-    }
-
-    onRowHover (rowNumber) {
-        this.updateOperationButtonVisibility(rowNumber, 'visible');
-    }
-
-    onRowHoverExit (rowNumber) {
-        this.updateOperationButtonVisibility(rowNumber, 'hidden');
-    }
-
-    onPreviousPage () {
-        console.log('onPreviousPage');
-    }
-
-    onNextPage () {
-        console.log('onNextPage');
-    }
-
-    onAckAlarms (ackAll) {
-        this.props.onUpdateAlarms(ackAll);
-    }
-
-    render () {
-        const rowStyles = {
-            name: {
-                width: 30
-            },
-            alarmType: {
-                width: 30
-            },
-            creatationTime: {
-                width: 170
-            },
-            footer: {
-                margin: '0 0 0.5em 0',
-                textAlign: 'right',
-                verticalAlign: 'middle'
-            }
-        }
         // console.log('AlarmList selectedRows: ' + this.props.selectedRows);
-        return (
+    return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div>
                     <AlarmOperation alarmItems={this.props.alarmItems}
@@ -396,11 +410,17 @@ class AlarmList extends Component {
                         onRowSelection={this.handleRowSelection}
                         onRowHover={this.onRowHover}
                         onRowHoverExit={this.onRowHoverExit}>
+                        <TableHeader>
+                          <TableRow>
+                              <TableHeaderColumn>Name</TableHeaderColumn>
+                              <TableHeaderColumn>Desc</TableHeaderColumn>
+                          </TableRow>
+                        </TableHeader>
                         <TableBody showRowHover={true} displayRowCheckbox={false}>
                             {this.props.alarmItems.map((row, index) => {
-                                let refName = 'row' + index;
-                                if (row.acked === false) {
-                                    return (
+                              let refName = 'row' + index;
+                              if (row.acked === false) {
+                                return (
                                         <TableRow key={index} selected={this.isSelected(index)} className={refName}>
                                             <TableRowColumn style={{width: 10, visibility: 'hidden'}} >Ack</TableRowColumn>
                                             <TableRowColumn style={rowStyles.name}>{row.tagName}</TableRowColumn>
@@ -416,9 +436,9 @@ class AlarmList extends Component {
                                                 </IconMenu>
                                             </TableRowColumn>
                                         </TableRow>);
-                                } else {
-                                    return (
-                                        <TableRow key={index} selected={this.isSelected(index)} className={refName}>
+                              } else {
+                                return (
+                                <TableRow key={index} selected={this.isSelected(index)} className={refName}>
                                             {/* <TableRowColumn ><IconDone/></TableRowColumn> */}
                                             <TableRowColumn style={{width: 10}}>Ack</TableRowColumn>
                                             <TableRowColumn style={rowStyles.name}>{row.tagName}</TableRowColumn>
@@ -434,7 +454,7 @@ class AlarmList extends Component {
                                                 </IconMenu>
                                             </TableRowColumn>
                                         </TableRow>);
-                                }
+                              }
                             })}
                         </TableBody>
                         <TableFooter>
@@ -451,30 +471,30 @@ class AlarmList extends Component {
                     </Table>
                 </div>
             </MuiThemeProvider>
-        )
-    }
+    )
+  }
 }
 
 class AlarmEntryInfo extends Component {
-    constructor (props, context) {
-        super(props, context)
+  constructor (props, context) {
+    super(props, context)
+  }
+
+  render () {
+    let itemName, itemDesc, priority, dispose;
+    if (this.props.lastSelectedRow) {
+      itemName = this.props.lastSelectedRow.tagName;
+      itemDesc = this.props.lastSelectedRow.tagDesc;
+      priority = this.props.lastSelectedRow.priority;
+      dispose = `需关闭设备 ${this.props.lastSelectedRow.device}，进行检修！`;
+    } else {
+      itemName = '';
+      itemDesc = '';
+      priority = '';
+      dispose = '';
     }
 
-    render () {
-        let itemName, itemDesc, priority, dispose;
-        if (this.props.lastSelectedRow) {
-            itemName = this.props.lastSelectedRow.tagName;
-            itemDesc = this.props.lastSelectedRow.tagDesc;
-            priority = this.props.lastSelectedRow.priority;
-            dispose = `需关闭设备 ${this.props.lastSelectedRow.device}，进行检修！`;
-        } else {
-            itemName = '';
-            itemDesc = '';
-            priority = '';
-            dispose = '';
-        }
-
-        return (
+    return (
             <MuiThemeProvider muiTheme={muiTheme}>
                 <div style={{'margin': 10}}>
                     <p>报警名称：{itemName}</p>
@@ -483,15 +503,15 @@ class AlarmEntryInfo extends Component {
                     <p>报警处置：{dispose}</p>
                 </div>
             </MuiThemeProvider>
-        )
-    }
+    )
+  }
 }
 
 class RealtimeAlarm extends Component {
-    constructor (props, context) {
-        super(props, context);
-        this.state = {
-            currentShowItems: [
+  constructor (props, context) {
+    super(props, context);
+    this.state = {
+      currentShowItems: [
                 {tagName: 'AA', creationTime: '2017/6/15 12:00:03', almType: 'H', tagDesc: 'This is AA description', device: 'B', priority: 0, acked: false},
                 {tagName: 'BB', creationTime: '2017/6/15 12:01:14', almType: 'LL', tagDesc: 'This is BB description', device: 'A', priority: 0, acked: false},
                 {tagName: 'CC', creationTime: '2017/6/15 12:05:23', almType: 'HH', tagDesc: 'This is CC description', device: 'B', priority: 0, acked: false},
@@ -501,134 +521,134 @@ class RealtimeAlarm extends Component {
                 {tagName: 'GG', creationTime: '2017/6/15 12:45:00', almType: 'H', tagDesc: 'This is GG description', device: 'B', priority: 31, acked: false},
                 {tagName: 'HH', creationTime: '2017/6/15 13:03:03', almType: 'HH', tagDesc: 'This is HH description', device: 'A', priority: 31, acked: false},
                 {tagName: 'II', creationTime: '2017/6/15 13:05:56', almType: 'L', tagDesc: 'This is II description', device: 'B', priority: 31, acked: false}
-            ],
-            alarmItems: [],
-            lastSelectedRow: null,
-            selectedRows: [],
-            filterData: [
-                {
-                    name: '所有报警',
-                    filterKey: 'catalog',
-                    filterValue: 'PLC',
-                    icon: 'ContentInbox',
-                    subItems: []
-                },
-                {
-                    name: '优先级',
-                    filterKey: '',
-                    filterValue: '',
-                    icon: 'ActionGrade',
-                    subItems: [
+      ],
+      alarmItems: [],
+      lastSelectedRow: null,
+      selectedRows: [],
+      filterData: [
+        {
+          name: '所有报警',
+          filterKey: 'catalog',
+          filterValue: 'PLC',
+          icon: 'ContentInbox',
+          subItems: []
+        },
+        {
+          name: '优先级',
+          filterKey: '',
+          filterValue: '',
+          icon: 'ActionGrade',
+          subItems: [
                         {name: '优先级0', filterKey: FilterType.priority, filterValue: '0', icon: 'ActionGrade', subItems: []},
                         {name: '优先级31', filterKey: FilterType.priority, filterValue: '31', icon: 'ActionGrade', subItems: []}
-                    ]
-                },
-                {
-                    name: '设备',
-                    filterKey: '',
-                    filterValue: '',
-                    icon: 'ActionGrade',
-                    subItems: [
+          ]
+        },
+        {
+          name: '设备',
+          filterKey: '',
+          filterValue: '',
+          icon: 'ActionGrade',
+          subItems: [
                         {name: '设备A', filterKey: FilterType.device, filterValue: 'A', icon: 'ActionGrade', subItems: []},
                         {name: '设备B', filterKey: FilterType.device, filterValue: 'B', icon: 'ActionGrade', subItems: []}
-                    ]
-                }
-            ],
-            flattenFilters: []
+          ]
         }
-
-        this.onAlarmFilter = this.onAlarmFilter.bind(this);
-        this.onAlarmItemSelected = this.onAlarmItemSelected.bind(this);
-        this.onUpdateAlarms = this.onUpdateAlarms.bind(this);
+      ],
+      flattenFilters: []
     }
 
-    componentWillMount () {
-        this.setState({
-            alarmItems: this.state.currentShowItems
-        });
+    this.onAlarmFilter = this.onAlarmFilter.bind(this);
+    this.onAlarmItemSelected = this.onAlarmItemSelected.bind(this);
+    this.onUpdateAlarms = this.onUpdateAlarms.bind(this);
+  }
+
+  componentWillMount () {
+    this.setState({
+      alarmItems: this.state.currentShowItems
+    });
+  }
+
+  onAlarmItemSelected (selectedAlarms) {
+    if (selectedAlarms === 'undefined' || selectedAlarms.length <= 0) {
+      return;
     }
+    let [lastItem, ...middleItems] = [...selectedAlarms].reverse();
+    this.setState({
+      lastSelectedRow: this.state.currentShowItems[lastItem],
+      selectedRows: selectedAlarms
+    });
+  }
 
-    onAlarmItemSelected (selectedAlarms) {
-        if (selectedAlarms === 'undefined' || selectedAlarms.length <= 0) {
-            return;
-        }
-        let [lastItem, ...middleItems] = [...selectedAlarms].reverse();
-        this.setState({
-            lastSelectedRow: this.state.currentShowItems[lastItem],
-            selectedRows: selectedAlarms
-        });
+  filterFlatten (filterItems) {
+    for (var index = 0; index < filterItems.length; index++) {
+      var element = filterItems[index];
+      if (element.filterKey !== '') {
+        this.state.flattenFilters.push(
+          {
+            filterKey: element.filterKey,
+            filterValue: element.filterValue
+          });
+      }
+
+      let subLen = element.subItems.length !== 0;
+      while (subLen) {
+        this.filterFlatten(element.subItems);
+        subLen = false;
+      }
     }
+  }
 
-    filterFlatten (filterItems) {
-        for (var index = 0; index < filterItems.length; index++) {
-            var element = filterItems[index];
-            if (element.filterKey !== '') {
-                this.state.flattenFilters.push(
-                    {
-                        filterKey: element.filterKey,
-                        filterValue: element.filterValue
-                    });
-            }
-
-            let subLen = element.subItems.length !== 0;
-            while (subLen) {
-                this.filterFlatten(element.subItems);
-                subLen = false;
-            }
-        }
-    }
-
-    onAlarmFilter (currentFilterIndex) {
+  onAlarmFilter (currentFilterIndex) {
         // 在界面显示的时候，是按照顺序往下递增，而filterData只计算第一层的item数，且filterData会递归
         // 因此需要那一个一维的数组保存所有的filter数据，也就是所谓的Array Flatten
-        if (this.state.flattenFilters.length === 0) {
-            this.filterFlatten(this.state.filterData);
-        }
+    if (this.state.flattenFilters.length === 0) {
+      this.filterFlatten(this.state.filterData);
+    }
 
         // 保存原始的所有数据
-        if (currentFilterIndex >= 0 && currentFilterIndex <= this.state.flattenFilters.length) {
-            let currentFilter = this.state.flattenFilters[currentFilterIndex];
-            let newAlarmItems = this.state.alarmItems.filter((alarm) => {
-                if (currentFilter.filterKey === FilterType.priority) {
-                    return currentFilter.filterValue == alarm.priority;
-                } else if (currentFilter.filterKey === FilterType.device) {
-                    return currentFilter.filterValue == alarm.device;
-                }
-            });
-
-            if (newAlarmItems.length !== 0) {
-                this.setState({
-                    currentShowItems: newAlarmItems
-                });
-            } else {
-                this.setState({
-                    currentShowItems: this.state.alarmItems
-                });
-            }
+    if (currentFilterIndex >= 0 && currentFilterIndex <= this.state.flattenFilters.length) {
+      let currentFilter = this.state.flattenFilters[currentFilterIndex];
+      let newAlarmItems = this.state.alarmItems.filter((alarm) => {
+        if (currentFilter.filterKey === FilterType.priority) {
+          return currentFilter.filterValue == alarm.priority;
+        } else if (currentFilter.filterKey === FilterType.device) {
+          return currentFilter.filterValue == alarm.device;
         }
-    }
+      });
 
-    onUpdateAlarms (ackAll) {
-        let newAlarms = this.state.currentShowItems;
-        if (ackAll) {
-            // console.log('Ack all alarm');
-            this.state.currentShowItems.map((row, index) => {
-                newAlarms[index].acked = true;
-            });
-        } else {
-            // console.log('Ack alarm rows: ' + this.state.selectedRows);
-            this.state.selectedRows.map((rowNumber, index) => {
-                newAlarms[rowNumber].acked = true;
-            });
-        }
-
+      if (newAlarmItems.length !== 0) {
         this.setState({
-            currentShowItems: newAlarms
-        })
+          currentShowItems: newAlarmItems
+        });
+      } else {
+        this.setState({
+          currentShowItems: this.state.alarmItems
+        });
+      }
+    }
+  }
+
+  onUpdateAlarms (ackAll) {
+    let newAlarms = this.state.currentShowItems;
+    if (ackAll) {
+            // console.log('Ack all alarm');
+      this.state.currentShowItems.map((row, index) => {
+        newAlarms[index].acked = true;
+      });
+    } else {
+            // console.log('Ack alarm rows: ' + this.state.selectedRows);
+      this.state.selectedRows.map((rowNumber, index) => {
+        newAlarms[rowNumber].acked = true;
+      });
     }
 
-    render () {
-        return (
+    this.setState({
+      currentShowItems: newAlarms
+    })
+  }
+
+  render () {
+    return (
             <MuiThemeProvider muiTheme={muiTheme} >
                 <div style={styles.container}>
                     <ControlHeader />
@@ -641,8 +661,8 @@ class RealtimeAlarm extends Component {
                     </div>
                 </div>
             </MuiThemeProvider>
-        )
-    }
+    )
+  }
 }
 
 export default RealtimeAlarm;
