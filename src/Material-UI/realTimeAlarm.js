@@ -2,7 +2,7 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 13:29:01
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-23 08:54:17
+ * @Last Modified time: 2017-06-23 17:27:29
  *
  * @Description
  * real time alarm control
@@ -29,8 +29,22 @@ import { ContentInbox, ActionGrade } from 'material-ui/svg-icons';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 import { colors, getMuiTheme, MuiThemeProvider, darkBaseTheme, lightBaseTheme } from 'material-ui/styles';
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn, TableFooter } from 'material-ui/Table';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+  TableFooter
+} from 'material-ui/Table';
 import SvgIcon from 'material-ui/SvgIcon';
+
+import {red500, green500} from 'material-ui/styles/colors'
+
+import 'react-table/react-table.css';
+import ReactTable from 'react-table';
+// import CodeHighlight from '../utils/codeHighlight'
 
 const styles = {
   container: {
@@ -84,6 +98,9 @@ const styles = {
         // 'background-color': '#ddd',
     'padding': 0,
     'margin': 0
+  },
+  alarmListRowStyle: {
+    paddingTop: '3px',
   }
 };
 
@@ -104,7 +121,7 @@ const FilterType = {
   device: Symbol('device')
 }
 
-const IconDone = ({props, disabled, onClick}) => (
+const IconBtnDone = ({props, disabled, onClick}) => (
     <IconButton tooltip='Ack' disabled={disabled}>
         <SvgIcon {...props} onClick={onClick}>
             <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
@@ -112,7 +129,7 @@ const IconDone = ({props, disabled, onClick}) => (
     </IconButton>
 )
 
-const IconNext = ({props, disabled, onClick}) => (
+const IconBtnNext = ({props, disabled, onClick}) => (
     <IconButton disabled={disabled}>
         <SvgIcon {...props} onClick={onClick}>
             <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z" />
@@ -120,12 +137,18 @@ const IconNext = ({props, disabled, onClick}) => (
     </IconButton>
 )
 
-const IconPrevious = ({props, disabled, onClick}) => (
+const IconBtnPrevious = ({props, disabled, onClick}) => (
     <IconButton disabled={disabled}>
         <SvgIcon {...props} onClick={onClick}>
             <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" />
         </SvgIcon>
     </IconButton>
+)
+
+const IconStart = ({props, color}) => (
+  <SvgIcon {...props} style={{width: '20', height: '20', margin: '0'}} color={color}>
+      <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" />
+  </SvgIcon>
 )
 
 class ControlHeader extends Component {
@@ -319,7 +342,7 @@ class AlarmOperation extends Component {
                         open={this.state.alarmPrint}
                         onRequestClose={this.onPrintDlgClose}>准备打印报警！</Dialog>
 
-                    <IconDone disabled={false} onClick={this.onAck}/>
+                    <IconBtnDone disabled={false} onClick={this.onAck}/>
                     <RaisedButton label='确认所有' style={buttonStyle} primary={true} onTouchTap={this.onAckAll}/>
                     <RaisedButton label='冻结' style={buttonStyle} primary={true} onTouchTap={this.onFreeze}/>
                     <RaisedButton label='消音' style={buttonStyle} secondary={true} onTouchTap={this.onPrint}/>
@@ -439,7 +462,6 @@ class AlarmList extends Component {
                               } else {
                                 return (
                                 <TableRow key={index} selected={this.isSelected(index)} className={refName}>
-                                            {/* <TableRowColumn ><IconDone/></TableRowColumn> */}
                                             <TableRowColumn style={{width: 10}}>Ack</TableRowColumn>
                                             <TableRowColumn style={rowStyles.name}>{row.tagName}</TableRowColumn>
                                             <TableRowColumn style={rowStyles.alarmType}>{row.almType}</TableRowColumn>
@@ -463,14 +485,91 @@ class AlarmList extends Component {
                                     <b>共：{this.props.alarmItems.length} 条报警</b>
                                 </TableRowColumn>
                                 <TableRowColumn style={rowStyles.footer}>
-                                    <IconPrevious disabled={true} onClick={this.onPreviousPage} />
-                                    <IconNext disabled={false} onClick={this.onNextPage.bind}/>
+                                    <IconBtnPrevious disabled={true} onClick={this.onPreviousPage} />
+                                    <IconBtnNext disabled={false} onClick={this.onNextPage.bind}/>
                                 </TableRowColumn >
                             </TableRow>
                         </TableFooter>
                     </Table>
                 </div>
             </MuiThemeProvider>
+    )
+  }
+}
+
+class AlarmListV2 extends Component {
+  constructor (props, context) {
+    super(props, context);
+    this.state = {
+      columnTitle: [
+        {Header: '状态', accessor: 'acked', width:90, 
+          Cell: (row) => (
+            <div>
+              <div style={{float: 'left', margin: '0 10px 0 0'}}>
+                <IconStart color={row.value === true? green500 : red500} />
+              </div>
+              <div style={styles.alarmListRowStyle}>
+                {row.value === true? '已确认' : '报警中'}
+              </div>
+            </div>)
+        },
+        {Header: '位号名', accessor: 'tagName', width:100, 
+          filterMethod: (filter, row) => (row[filter.id].includes(filter.value)),
+          Cell: (row) => (
+            <div style={styles.alarmListRowStyle}>
+              {row.value}
+            </div>
+          )
+        },
+        {Header: '报警类型', accessor: 'almType', width:80, },
+        {Header: '时间', accessor: 'creationTime', width:150, 
+          filterMethod: (filter, row) => (row[filter.id].includes(filter.value)),
+          Cell: (row) => (
+            <div style={styles.alarmListRowStyle}>
+              {row.value}
+            </div>
+          )
+        },
+        {Header: '描述', accessor: 'tagDesc',
+          Cell: (row) => (
+            <div style={styles.alarmListRowStyle}>
+              {row.value}
+            </div>
+          )
+        },
+        ],
+    }
+  }
+  // defaultFilterMethod={(filter, row) => (String(row[filter.id]) === filter.value)}
+  // defaultFilterMethod={(filter, row) => (row[filter.id].includes(filter.value))}
+
+  handleRowClick (row) {
+    console.log(`AlarmListV2 click: ${row}`);
+  }
+
+  render() {
+    return (
+      <div className="table-wrap">
+        <ReactTable
+          data={this.props.items}
+          columns={this.state.columnTitle}
+          className='-striped -highlight'
+          defaultPageSize={10}
+          style={{
+              height: '300px' // This will force the table body to overflow and scroll, since there is not enough room
+            }}
+          onClick={this.handleRowClick.bind(this)}
+          filterable={true}
+          
+          getTrProps={(state, rowInfo, column, instance) => {
+            return {
+              onClick: e => {
+                console.log(`${rowInfo} clicked`);
+              }
+            }
+          }}
+          />
+      </div>
     )
   }
 }
@@ -512,7 +611,7 @@ class RealtimeAlarm extends Component {
     super(props, context);
     this.state = {
       currentShowItems: [
-                {tagName: 'AA', creationTime: '2017/6/15 12:00:03', almType: 'H', tagDesc: 'This is AA description', device: 'B', priority: 0, acked: false},
+                {tagName: 'AA', creationTime: '2017/6/15 12:00:03', almType: 'H', tagDesc: 'This is AA description', device: 'B', priority: 0, acked: true},
                 {tagName: 'BB', creationTime: '2017/6/15 12:01:14', almType: 'LL', tagDesc: 'This is BB description', device: 'A', priority: 0, acked: false},
                 {tagName: 'CC', creationTime: '2017/6/15 12:05:23', almType: 'HH', tagDesc: 'This is CC description', device: 'B', priority: 0, acked: false},
                 {tagName: 'DD', creationTime: '2017/6/15 12:10:35', almType: 'L', tagDesc: 'This is DD description', device: 'A', priority: 0, acked: false},
@@ -654,8 +753,16 @@ class RealtimeAlarm extends Component {
                     <ControlHeader />
                     <FilterTree filterData={this.state.filterData} onFilter={this.onAlarmFilter}/>
                     <div style={styles.alarmContent}>
-                        <AlarmList alarmItems={this.state.currentShowItems} onSelectedRows={this.onAlarmItemSelected}
-                                   selectedRows={this.state.selectedRows} onUpdateAlarms={this.onUpdateAlarms}/>
+                        {/*<AlarmList
+                          alarmItems={this.state.currentShowItems}
+                          onSelectedRows={this.onAlarmItemSelected}
+                          selectedRows={this.state.selectedRows}
+                          onUpdateAlarms={this.onUpdateAlarms}/> */}
+                        <AlarmOperation
+                          alarmItems={this.state.currentShowItems}
+                          selectedRows={this.state.selectedRows}
+                          onAckAlarms={this.onUpdateAlarms}/>
+                        <AlarmListV2 items={this.state.currentShowItems} />
                         <Divider />
                         <AlarmEntryInfo lastSelectedRow={this.state.lastSelectedRow}/>
                     </div>

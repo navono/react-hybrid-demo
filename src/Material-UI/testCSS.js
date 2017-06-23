@@ -2,7 +2,7 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 16:20:41
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-23 08:55:27
+ * @Last Modified time: 2017-06-23 10:19:55
  *
  * @Description
  */
@@ -100,15 +100,17 @@ class TestPage extends Component {
     }, {
       Header: 'Age',
       accessor: 'age',
-      Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
-    }, {
-      id: 'friendName', // Required because our accessor is not a string
-      Header: 'Friend Name',
-      accessor: d => d.friend.name // Custom value accessors!
-    }, {
-      Header: props => <span>Friend Age</span>, // Custom header components!
-      accessor: 'friend.age'
-    }]
+      // Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
+    }, 
+    // {
+    //   id: 'friendName', // Required because our accessor is not a string
+    //   Header: 'Friend Name',
+    //   accessor: d => d.friend.name // Custom value accessors!
+    // }, {
+    //   Header: props => <span>Friend Age</span>, // Custom header components!
+    //   accessor: 'friend.age'
+    // }
+    ]
 
     return (
             <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
