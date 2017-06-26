@@ -2,7 +2,7 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 13:29:01
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-26 16:47:21
+ * @Last Modified time: 2017-06-26 16:48:57
  *
  * @Description
  * real time alarm control
@@ -624,7 +624,7 @@ class RealtimeAlarm extends Component {
     this.state = {
       currentShowItems: [
                 {tagName: 'AA', creationTime: '2017/6/15 12:00:03', almType: 'H', tagDesc: 'This is AA description',
-                 device: 'B', priority: 0, acked: true, selected: true},
+                 device: 'B', priority: 0, acked: true, selected: false},
                 {tagName: 'BB', creationTime: '2017/6/15 12:01:14', almType: 'LL', tagDesc: 'This is BB description',
                  device: 'A', priority: 0, acked: false, selected: false},
                 {tagName: 'CC', creationTime: '2017/6/15 12:05:23', almType: 'HH', tagDesc: 'This is CC description',
