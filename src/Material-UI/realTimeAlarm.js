@@ -2,7 +2,7 @@
  * @Author: Ping Qixing
  * @Date: 2017-06-13 13:29:01
  * @Last Modified by: Ping Qixing
- * @Last Modified time: 2017-06-23 17:27:29
+ * @Last Modified time: 2017-06-26 16:47:21
  *
  * @Description
  * real time alarm control
@@ -22,7 +22,8 @@ import {
   Subheader,
   Divider,
   Paper,
-  FontIcon
+  FontIcon,
+  Checkbox
 } from 'material-ui';
 import { ContentInbox, ActionGrade } from 'material-ui/svg-icons';
 
@@ -231,7 +232,7 @@ class FilterTree extends Component {
   }
 
   createListItems (filterData) {
-        // 无法使用Array的map，因为在map的过程中无法递归调用
+    // 无法使用Array的map，因为在map的过程中无法递归调用
     if (filterData !== 'undefined') {
       let items = [];
       for (var index = 0; index < filterData.length; index++) {
@@ -502,27 +503,36 @@ class AlarmListV2 extends Component {
     super(props, context);
     this.state = {
       columnTitle: [
-        {Header: '状态', accessor: 'acked', width:90, 
+        {Header: '', accessor: 'selected', width: 50, filterable: false, sortable: false, 
           Cell: (row) => (
+            <div>
+              <Checkbox checked={row.value} />
+            </div>
+          )
+        },
+        {Header: '状态', accessor: 'acked', width: 90, 
+          Cell: (row) => {
+            return (
             <div>
               <div style={{float: 'left', margin: '0 10px 0 0'}}>
                 <IconStart color={row.value === true? green500 : red500} />
               </div>
-              <div style={styles.alarmListRowStyle}>
+              <div style={styles.alarmListRowStyle} className="alarmRow">
                 {row.value === true? '已确认' : '报警中'}
               </div>
-            </div>)
+            </div>
+          )}
         },
-        {Header: '位号名', accessor: 'tagName', width:100, 
+        {Header: '位号名', accessor: 'tagName', width: 100, 
           filterMethod: (filter, row) => (row[filter.id].includes(filter.value)),
           Cell: (row) => (
-            <div style={styles.alarmListRowStyle}>
+            <div style={styles.alarmListRowStyle} className="alarmRow">
               {row.value}
             </div>
           )
         },
-        {Header: '报警类型', accessor: 'almType', width:80, },
-        {Header: '时间', accessor: 'creationTime', width:150, 
+        {Header: '报警类型', accessor: 'almType', width: 80,},
+        {Header: '时间', accessor: 'creationTime', width: 150, 
           filterMethod: (filter, row) => (row[filter.id].includes(filter.value)),
           Cell: (row) => (
             <div style={styles.alarmListRowStyle}>
@@ -543,8 +553,12 @@ class AlarmListV2 extends Component {
   // defaultFilterMethod={(filter, row) => (String(row[filter.id]) === filter.value)}
   // defaultFilterMethod={(filter, row) => (row[filter.id].includes(filter.value))}
 
-  handleRowClick (row) {
-    console.log(`AlarmListV2 click: ${row}`);
+  handleRowClick (rowInfo) {
+    this.props.onRowSelected(rowInfo.index);
+  }
+
+  componentWillReceiveProps (nextProps, nextState) {
+    // console.log(`nextProps: ${nextProps}, nextState: ${nextState}`);
   }
 
   render() {
@@ -558,13 +572,11 @@ class AlarmListV2 extends Component {
           style={{
               height: '300px' // This will force the table body to overflow and scroll, since there is not enough room
             }}
-          onClick={this.handleRowClick.bind(this)}
           filterable={true}
-          
           getTrProps={(state, rowInfo, column, instance) => {
             return {
               onClick: e => {
-                console.log(`${rowInfo} clicked`);
+                return this.handleRowClick(rowInfo);
               }
             }
           }}
@@ -611,15 +623,24 @@ class RealtimeAlarm extends Component {
     super(props, context);
     this.state = {
       currentShowItems: [
-                {tagName: 'AA', creationTime: '2017/6/15 12:00:03', almType: 'H', tagDesc: 'This is AA description', device: 'B', priority: 0, acked: true},
-                {tagName: 'BB', creationTime: '2017/6/15 12:01:14', almType: 'LL', tagDesc: 'This is BB description', device: 'A', priority: 0, acked: false},
-                {tagName: 'CC', creationTime: '2017/6/15 12:05:23', almType: 'HH', tagDesc: 'This is CC description', device: 'B', priority: 0, acked: false},
-                {tagName: 'DD', creationTime: '2017/6/15 12:10:35', almType: 'L', tagDesc: 'This is DD description', device: 'A', priority: 0, acked: false},
-                {tagName: 'EE', creationTime: '2017/6/15 12:20:03', almType: 'HH', tagDesc: 'This is EE description', device: 'B', priority: 31, acked: false},
-                {tagName: 'FF', creationTime: '2017/6/15 12:30:45', almType: 'LL', tagDesc: 'This is FF description', device: 'A', priority: 31, acked: false},
-                {tagName: 'GG', creationTime: '2017/6/15 12:45:00', almType: 'H', tagDesc: 'This is GG description', device: 'B', priority: 31, acked: false},
-                {tagName: 'HH', creationTime: '2017/6/15 13:03:03', almType: 'HH', tagDesc: 'This is HH description', device: 'A', priority: 31, acked: false},
-                {tagName: 'II', creationTime: '2017/6/15 13:05:56', almType: 'L', tagDesc: 'This is II description', device: 'B', priority: 31, acked: false}
+                {tagName: 'AA', creationTime: '2017/6/15 12:00:03', almType: 'H', tagDesc: 'This is AA description',
+                 device: 'B', priority: 0, acked: true, selected: true},
+                {tagName: 'BB', creationTime: '2017/6/15 12:01:14', almType: 'LL', tagDesc: 'This is BB description',
+                 device: 'A', priority: 0, acked: false, selected: false},
+                {tagName: 'CC', creationTime: '2017/6/15 12:05:23', almType: 'HH', tagDesc: 'This is CC description',
+                 device: 'B', priority: 0, acked: false, selected: false},
+                {tagName: 'DD', creationTime: '2017/6/15 12:10:35', almType: 'L', tagDesc: 'This is DD description',
+                 device: 'A', priority: 0, acked: false, selected: false},
+                {tagName: 'EE', creationTime: '2017/6/15 12:20:03', almType: 'HH', tagDesc: 'This is EE description',
+                 device: 'B', priority: 31, acked: false, selected: false},
+                {tagName: 'FF', creationTime: '2017/6/15 12:30:45', almType: 'LL', tagDesc: 'This is FF description',
+                 device: 'A', priority: 31, acked: false, selected: false},
+                {tagName: 'GG', creationTime: '2017/6/15 12:45:00', almType: 'H', tagDesc: 'This is GG description',
+                 device: 'B', priority: 31, acked: false, selected: false},
+                {tagName: 'HH', creationTime: '2017/6/15 13:03:03', almType: 'HH', tagDesc: 'This is HH description',
+                 device: 'A', priority: 31, acked: false, selected: false},
+                {tagName: 'II', creationTime: '2017/6/15 13:05:56', almType: 'L', tagDesc: 'This is II description',
+                 device: 'B', priority: 31, acked: false, selected: false}
       ],
       alarmItems: [],
       lastSelectedRow: null,
@@ -659,6 +680,7 @@ class RealtimeAlarm extends Component {
     this.onAlarmFilter = this.onAlarmFilter.bind(this);
     this.onAlarmItemSelected = this.onAlarmItemSelected.bind(this);
     this.onUpdateAlarms = this.onUpdateAlarms.bind(this);
+    this.hanleRowSelected = this.hanleRowSelected.bind(this);
   }
 
   componentWillMount () {
@@ -730,12 +752,12 @@ class RealtimeAlarm extends Component {
   onUpdateAlarms (ackAll) {
     let newAlarms = this.state.currentShowItems;
     if (ackAll) {
-            // console.log('Ack all alarm');
+      // console.log('Ack all alarm');
       this.state.currentShowItems.map((row, index) => {
         newAlarms[index].acked = true;
       });
     } else {
-            // console.log('Ack alarm rows: ' + this.state.selectedRows);
+      // console.log('Ack alarm rows: ' + this.state.selectedRows);
       this.state.selectedRows.map((rowNumber, index) => {
         newAlarms[rowNumber].acked = true;
       });
@@ -744,6 +766,24 @@ class RealtimeAlarm extends Component {
     this.setState({
       currentShowItems: newAlarms
     })
+  }
+
+  hanleRowSelected (rowIndex) {
+    let newAlarmItems = this.state.currentShowItems;
+    newAlarmItems[rowIndex].selected = !newAlarmItems[rowIndex].selected;
+    // console.log(`set ${newAlarmItems[row].tagName} to ${newAlarmItems[row].selected}`);
+    if (newAlarmItems[rowIndex].selected) {
+      let rows = this.state.selectedRows;
+      rows.push(rowIndex);
+      this.setState({
+          selectedRows: rows
+        }
+      )
+    }
+
+    this.setState({
+      currentShowItems: newAlarmItems
+    });
   }
 
   render () {
@@ -762,7 +802,7 @@ class RealtimeAlarm extends Component {
                           alarmItems={this.state.currentShowItems}
                           selectedRows={this.state.selectedRows}
                           onAckAlarms={this.onUpdateAlarms}/>
-                        <AlarmListV2 items={this.state.currentShowItems} />
+                        <AlarmListV2 items={this.state.currentShowItems} onRowSelected={this.hanleRowSelected} />
                         <Divider />
                         <AlarmEntryInfo lastSelectedRow={this.state.lastSelectedRow}/>
                     </div>
